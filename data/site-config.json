@@ -4,6 +4,10 @@
   "logoVersion": 2,
   "favicon": "assets/favicon.png",
   "faviconVersion": 1,
-  "pkg": {},
-  "pkgVersion": {}
+  "pkg": {
+    "asformin": "assets/pkg-asformin.jpg"
+  },
+  "pkgVersion": {
+    "asformin": 1
+  }
 }
