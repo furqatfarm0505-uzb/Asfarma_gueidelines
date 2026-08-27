@@ -5,9 +5,11 @@
   "favicon": "assets/favicon.png",
   "faviconVersion": 1,
   "pkg": {
-    "asformin": "assets/pkg-asformin.jpg"
+    "asformin": "assets/pkg-asformin.jpg",
+    "kardiva": "assets/pkg-kardiva.jpg"
   },
   "pkgVersion": {
-    "asformin": 1
+    "asformin": 1,
+    "kardiva": 1
   }
 }
