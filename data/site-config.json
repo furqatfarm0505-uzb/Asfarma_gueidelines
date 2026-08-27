@@ -7,11 +7,13 @@
   "pkg": {
     "asformin": "assets/pkg-asformin.jpg",
     "kardiva": "assets/pkg-kardiva.jpg",
-    "dilyutiks": "assets/pkg-dilyutiks.jpg"
+    "dilyutiks": "assets/pkg-dilyutiks.jpg",
+    "dorepam": "assets/pkg-dorepam.jpg"
   },
   "pkgVersion": {
     "asformin": 1,
     "kardiva": 1,
-    "dilyutiks": 1
+    "dilyutiks": 1,
+    "dorepam": 1
   }
 }
