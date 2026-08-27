@@ -6,10 +6,12 @@
   "faviconVersion": 1,
   "pkg": {
     "asformin": "assets/pkg-asformin.jpg",
-    "kardiva": "assets/pkg-kardiva.jpg"
+    "kardiva": "assets/pkg-kardiva.jpg",
+    "dilyutiks": "assets/pkg-dilyutiks.jpg"
   },
   "pkgVersion": {
     "asformin": 1,
-    "kardiva": 1
+    "kardiva": 1,
+    "dilyutiks": 1
   }
 }
