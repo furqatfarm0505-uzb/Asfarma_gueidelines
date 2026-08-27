@@ -9,13 +9,15 @@
     "kardiva": "assets/pkg-kardiva.jpg",
     "dilyutiks": "assets/pkg-dilyutiks.jpg",
     "dorepam": "assets/pkg-dorepam.jpg",
-    "evalep": "assets/pkg-evalep.jpg"
+    "evalep": "assets/pkg-evalep.jpg",
+    "bikarbonorm": "assets/pkg-bikarbonorm.jpg"
   },
   "pkgVersion": {
     "asformin": 1,
     "kardiva": 1,
     "dilyutiks": 1,
     "dorepam": 1,
-    "evalep": 1
+    "evalep": 1,
+    "bikarbonorm": 1
   }
 }
