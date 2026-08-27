@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASFARMA — Далиллар базаси</title>
+<link rel="icon" id="dynamic-favicon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbfbf8;
+  --paper:#ffffff;
+  --ink:#16241f;
+  --ink-soft:#4b5a54;
+  --muted:#8a968f;
+  --line:#dfe4df;
+  --line-soft:#ecefec;
+  --teal:#1c463d;
+  --teal-deep:#0f2b26;
+  --amber:#c8862e;
+  --amber-soft:#f4e6cf;
+  --danger:#a83c3c;
+  --radius:2px;
+  --font-display:'Source Serif 4', Georgia, serif;
+  --font-body:'IBM Plex Sans', 'Segoe UI', sans-serif;
+  --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+#app{min-height:100vh;display:flex;flex-direction:column;}
+
+::selection{background:var(--amber-soft);}
+
+button{font-family:inherit;cursor:pointer;}
+input{font-family:inherit;}
+
+/* ---------- HEADER ---------- */
+.site-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:22px 40px;
+  border-bottom:1px solid var(--line);
+  background:var(--paper);
+  position:relative;
+  z-index:20;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width:0;
+}
+.brand-logo-slot{
+  width:52px;height:52px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  flex-shrink:0;
+  background:var(--bg);
+}
+.brand-logo-slot img{width:100%;height:100%;object-fit:contain;}
+.brand-logo-slot .logo-fallback{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:15px;
+  color:var(--teal);
+  letter-spacing:0.02em;
+}
+.brand-name{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:19px;
+  letter-spacing:0.01em;
+  color:var(--teal-deep);
+  line-height:1.1;
+}
+.brand-name small{
+  display:block;
+  font-family:var(--font-mono);
+  font-weight:400;
+  font-size:10.5px;
+  letter-spacing:0.14em;
+  color:var(--muted);
+  margin-top:3px;
+  text-transform:uppercase;
+}
+
+.lang-switch{
+  display:flex;
+  align-items:center;
+  border:1px solid var(--line);
+  border-radius:20px;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.lang-switch button{
+  border:none;
+  background:transparent;
+  padding:7px 16px;
+  font-size:12.5px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  color:var(--muted);
+  transition:background .15s ease, color .15s ease;
+}
+.lang-switch button.active{
+  background:var(--teal-deep);
+  color:#fdf9ef;
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  padding:64px 40px 40px;
+  text-align:center;
+  border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(ellipse 900px 300px at 50% -80px, rgba(28,70,61,0.06), transparent 70%),
+    var(--paper);
+}
+.hero-eyebrow{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.24em;
+  color:var(--amber);
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+.hero h1{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:clamp(28px, 4.2vw, 50px);
+  line-height:1.12;
+  letter-spacing:-0.01em;
+  color:var(--teal-deep);
+  max-width:920px;
+  margin:0 auto 18px;
+}
+.hero p{
+  font-size:15.5px;
+  color:var(--ink-soft);
+  max-width:560px;
+  margin:0 auto;
+  line-height:1.55;
+}
+.hero-rule{
+  width:64px;height:3px;background:var(--amber);
+  margin:26px auto 0;
+  border-radius:2px;
+}
+
+/* ---------- DRUG SHELF ---------- */
+.shelf-wrap{
+  padding:44px 40px 68px;
+  max-width:1180px;
+  margin:0 auto;
+  width:100%;
+}
+.shelf-label{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-align:center;
+  margin-bottom:26px;
+}
+.shelf{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:18px;
+}
+.pill{
+  position:relative;
+  border:1px solid var(--line);
+  background:var(--paper);
+  border-radius:100px;
+  padding:22px 26px;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+  overflow:hidden;
+}
+.pill::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:6px;
+  background:var(--teal);
+  opacity:0;
+  transition:opacity .18s ease;
+}
+.pill:hover{
+  border-color:var(--teal);
+  transform:translateY(-3px);
+  box-shadow:0 14px 28px -18px rgba(15,43,38,0.35);
+}
+.pill:hover::before{opacity:1;}
+.pill-index{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  color:var(--amber);
+  letter-spacing:0.1em;
+}
+.pill-name{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:21px;
+  color:var(--teal-deep);
+  letter-spacing:0.01em;
+}
+.pill-cat{
+  font-size:11.5px;
+  color:var(--muted);
+  letter-spacing:0.01em;
+}
+.pill-count{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--ink-soft);
+  margin-top:2px;
+}
+
+/* ---------- FOOTER ---------- */
+.site-footer{
+  margin-top:auto;
+  padding:22px 40px;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:11.5px;
+  color:var(--muted);
+}
+.site-footer a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted);}
+.site-footer a:hover{color:var(--teal);border-color:var(--teal);}
+
+/* ---------- MODAL (drug window) ---------- */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,25,22,0.55);
+  backdrop-filter:blur(2px);
+  z-index:100;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:26px 18px;
+  overflow-y:auto;
+  animation:fadeIn .16s ease;
+}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.modal-window{
+  background:var(--paper);
+  width:100%;
+  max-width:1080px;
+  border-radius:6px;
+  border:1px solid var(--line);
+  box-shadow:0 30px 60px -20px rgba(15,25,22,0.4);
+  animation:slideUp .2s ease;
+  margin-bottom:26px;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+.modal-head{
+  display:flex;
+  align-items:center;
+  gap:24px;
+  padding:28px 32px;
+  border-bottom:1px solid var(--line);
+  position:sticky;top:0;
+  background:var(--paper);
+  border-radius:6px 6px 0 0;
+  z-index:5;
+}
+.pkg-photo{
+  width:96px;height:120px;
+  border:1px solid var(--line);
+  border-radius:4px;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  overflow:hidden;
+  text-align:center;
+}
+.pkg-photo img{width:100%;height:100%;object-fit:cover;}
+.pkg-photo .pkg-empty{
+  font-family:var(--font-mono);
+  font-size:9px;
+  color:var(--muted);
+  padding:8px;
+  line-height:1.4;
+}
+.modal-title-block{flex:1;min-width:0;}
+.modal-cat{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.1em;
+  color:var(--amber);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.modal-title-block h2{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:30px;
+  color:var(--teal-deep);
+  margin:0;
+  letter-spacing:0.01em;
+}
+.modal-sub{
+  font-size:12.5px;
+  color:var(--ink-soft);
+  margin-top:6px;
+  font-family:var(--font-mono);
+}
+.modal-close{
+  border:1px solid var(--line);
+  background:var(--paper);
+  width:38px;height:38px;
+  border-radius:50%;
+  font-size:16px;
+  color:var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:all .15s ease;
+}
+.modal-close:hover{background:var(--teal-deep);color:#fff;border-color:var(--teal-deep);}
+
+.modal-body{padding:8px 32px 32px;}
+
+/* legend row */
+.legend-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 18px;
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+  border-bottom:1px solid var(--line);
+}
+.legend-row .lg-num{flex:0 0 34px;}
+.legend-row .lg-name{flex:1 1 200px;min-width:0;}
+.legend-row .lg-meta{flex:0 0 auto;}
+
+/* trial rows */
+.trial-list{display:flex;flex-direction:column;gap:14px;padding:14px 0;}
+.trial-row{
+  border:1px solid var(--line-soft);
+  border-radius:6px;
+  background:var(--paper);
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  transform-origin:center;
+}
+.trial-row:hover{
+  transform:scale(1.012);
+  box-shadow:0 10px 26px -14px rgba(15,43,38,0.28);
+  border-color:var(--teal);
+  z-index:2;
+  position:relative;
+}
+.trial-row.trial-highlight{
+  animation:pulseHighlight 1.8s ease;
+  border-color:var(--amber);
+}
+@keyframes pulseHighlight{
+  0%{box-shadow:0 0 0 0 rgba(200,134,46,0.5);}
+  65%{box-shadow:0 0 0 16px rgba(200,134,46,0);}
+  100%{box-shadow:0 0 0 0 rgba(200,134,46,0);}
+}
+.trial-summary{
+  display:flex;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  gap:8px 14px;
+  padding:14px 18px 10px;
+  max-width:100%;
+}
+.trial-num{
+  flex:0 0 auto;
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--amber);
+  font-weight:600;
+  padding-top:2px;
+}
+.trial-name{
+  flex:1 1 200px;
+  min-width:140px;
+  font-weight:600;
+  font-size:14.5px;
+  color:var(--teal-deep);
+  line-height:1.35;
+  word-break:break-word;
+}
+.trial-meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px 14px;
+  flex:0 1 auto;
+  max-width:100%;
+}
+.trial-year, .trial-pop{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--ink-soft);
+  white-space:normal;
+  overflow-wrap:break-word;
+  line-height:1.4;
+}
+.trial-share{
+  flex:0 0 auto;
+  border:1px solid var(--line);
+  background:var(--paper);
+  width:30px;height:30px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;
+  color:var(--ink-soft);
+  transition:all .15s ease;
+}
+.trial-share:hover{
+  background:var(--teal-deep);
+  color:#fff;
+  border-color:var(--teal-deep);
+}
+.trial-share svg{width:14px;height:14px;}
+
+.trial-detail{
+  padding:4px 18px 16px;
+}
+.trial-detail-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px 28px;
+  background:var(--bg);
+  border:1px solid var(--line-soft);
+  border-radius:4px;
+  padding:16px 18px;
+}
+.detail-field{grid-column:span 1;min-width:0;}
+.detail-field.wide{grid-column:1 / -1;}
+.detail-field dt{
+  font-family:var(--font-mono);
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--amber);
+  margin-bottom:5px;
+}
+.detail-field dd{
+  margin:0;
+  font-size:13px;
+  line-height:1.55;
+  color:var(--ink);
+  white-space:pre-line;
+  word-break:break-word;
+}
+
+.category-divider{
+  padding:20px 18px 8px;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--teal);
+  border-bottom:1px solid var(--line-soft);
+  background:var(--bg);
+}
+.category-divider:first-child{padding-top:8px;}
+
+.trial-hint{
+  text-align:center;
+  font-size:11.5px;
+  color:var(--muted);
+  padding:16px 0 4px;
+  font-style:italic;
+}
+
+/* ---------- ADMIN ---------- */
+.admin-shell{
+  max-width:640px;
+  margin:0 auto;
+  padding:60px 24px 100px;
+  width:100%;
+}
+.admin-shell h1{
+  font-family:var(--font-display);
+  font-size:26px;
+  color:var(--teal-deep);
+  margin-bottom:6px;
+}
+.admin-shell .admin-lead{
+  color:var(--ink-soft);
+  font-size:13.5px;
+  margin-bottom:32px;
+}
+.login-card{
+  border:1px solid var(--line);
+  background:var(--paper);
+  border-radius:6px;
+  padding:32px;
+}
+.login-card label{
+  display:block;
+  font-size:12px;
+  color:var(--ink-soft);
+  margin-bottom:8px;
+  font-family:var(--font-mono);
+  letter-spacing:0.05em;
+}
+.login-card input[type=password]{
+  width:100%;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:4px;
+  font-size:14px;
+  margin-bottom:14px;
+}
+.login-card input[type=password]:focus{outline:2px solid var(--teal);outline-offset:1px;}
+.btn-primary{
+  background:var(--teal-deep);
+  color:#fdf9ef;
+  border:none;
+  padding:12px 22px;
+  border-radius:4px;
+  font-size:13.5px;
+  font-weight:600;
+  letter-spacing:0.02em;
+  transition:background .15s ease;
+}
+.btn-primary:hover{background:var(--teal);}
+.btn-secondary{
+  background:transparent;
+  border:1px solid var(--line);
+  color:var(--ink-soft);
+  padding:10px 18px;
+  border-radius:4px;
+  font-size:13px;
+}
+.btn-secondary:hover{border-color:var(--ink-soft);color:var(--ink);}
+.error-msg{
+  color:var(--danger);
+  font-size:12.5px;
+  margin:-6px 0 14px;
+}
+.admin-section{
+  border:1px solid var(--line);
+  background:var(--paper);
+  border-radius:6px;
+  padding:24px 26px;
+  margin-bottom:20px;
+}
+.admin-section h3{
+  font-family:var(--font-display);
+  font-size:16px;
+  color:var(--teal-deep);
+  margin:0 0 4px;
+}
+.admin-section .section-hint{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:16px;
+}
+.upload-row{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.upload-preview{
+  width:64px;height:64px;
+  border:1px solid var(--line);
+  border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  background:var(--bg);
+  flex-shrink:0;
+  font-family:var(--font-mono);
+  font-size:8px;
+  color:var(--muted);
+  text-align:center;
+}
+.upload-preview img{width:100%;height:100%;object-fit:cover;}
+.upload-preview.pkg-preview{width:64px;height:80px;}
+.file-input-label{
+  display:inline-block;
+  border:1px solid var(--line);
+  padding:9px 16px;
+  border-radius:4px;
+  font-size:12.5px;
+  color:var(--ink-soft);
+  cursor:pointer;
+}
+.file-input-label:hover{border-color:var(--teal);color:var(--teal);}
+.file-input-label input{display:none;}
+.remove-link{
+  font-size:11.5px;
+  color:var(--danger);
+  background:none;
+  border:none;
+  text-decoration:underline;
+  padding:0;
+}
+.drug-upload-list{display:flex;flex-direction:column;gap:16px;}
+.drug-upload-row{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding-top:16px;
+  border-top:1px solid var(--line-soft);
+}
+.drug-upload-row:first-child{border-top:none;padding-top:0;}
+.drug-upload-name{
+  width:130px;
+  flex-shrink:0;
+  font-weight:600;
+  font-size:13px;
+  color:var(--teal-deep);
+}
+.save-toast{
+  position:fixed;
+  bottom:24px;left:50%;
+  transform:translateX(-50%);
+  background:var(--teal-deep);
+  color:#fdf9ef;
+  padding:11px 22px;
+  border-radius:100px;
+  font-size:12.5px;
+  z-index:200;
+  animation:fadeIn .15s ease;
+}
+.admin-topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:8px;
+}
+.pw-change-row{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+}
+.pw-change-row input{
+  padding:9px 12px;border:1px solid var(--line);border-radius:4px;font-size:13px;flex:1;min-width:160px;
+}
+.gh-badge{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.04em;
+  padding:6px 12px;
+  border-radius:100px;
+}
+.gh-badge-ok{background:#e7f0ec;color:var(--teal-deep);}
+.gh-badge-warn{background:#fbeee0;color:#8a5a1e;}
+
+@media (max-width:640px){
+  .site-header{padding:16px 18px;}
+  .hero{padding:44px 18px 30px;}
+  .shelf-wrap{padding:30px 18px 48px;}
+  .modal-head{padding:20px;flex-wrap:wrap;}
+  .modal-body{padding:4px 16px 24px;}
+  .legend-row{display:none;}
+  .trial-detail-grid{grid-template-columns:1fr;}
+  .trial-meta{margin-left:0;width:100%;}
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const DRUGS = [{"key": "asformin", "name": "АСФОРМИН", "catRu": "Эндокринология · СД2", "catUz": "Эндокринология · ҚД2", "trials": [{"num": "1", "name": "UKPDS 34", "year": "1998", "purpose": "Эффективность метформина у пациентов с СД2 и избыточным весом", "design": "РКИ, проспективное", "population": "1704 (СД2, избыточный вес)", "results": "Снижение риска:\n- Общая смертность: на 36% (HR 0.64)\n- Инфаркт миокарда: на 39% (p=0.01)\n- Любые диабет-ассоциированные исходы: на 18%", "conclusion": "Метформин — первая линия терапии у пациентов с СД2 и избыточным весом, снижающая смертность и риск инфаркта."}, {"num": "2", "name": "DPP / DPPOS", "year": "2002 / 2025", "purpose": "Профилактика СД2 у лиц с предиабетом", "design": "РКИ, плацебо-контроль, долгосрочное наблюдение", "population": "3234 (предиабет)", "results": "Снижение риска развития СД2:\n- Через 3 года: на 31%\n- За 21 год наблюдения: отсрочка развития диабета", "conclusion": "Метформин эффективен для долгосрочной профилактики СД2 у лиц с предиабетом."}, {"num": "3", "name": "ADOPT", "year": "2006", "purpose": "Сравнение гликемической эффективности метформина, глибурида и розиглитазона", "design": "РКИ, двойное слепое, активно-контролируемое", "population": "4360 (недавно диагностированный СД2)", "results": "Длительность контроля гликемии: розиглитазон > метформин > глибурид", "conclusion": "Метформин уступает розиглитазону в долгосрочном гликемическом контроле, но превосходит глибурид."}, {"num": "4", "name": "RECORD", "year": "2009", "purpose": "Сердечно-сосудистая безопасность розиглитазона в комбинации с метформином или сульфонилмочевиной", "design": "РКИ, открытое, активно-контролируемое", "population": "4447 (СД2 с неконтролируемой гликемией на монотерапии)", "results": "Сердечно-сосудистая смертность: розиглитазон vs. метформин/сульфонилмочевина: 88 vs. 96 смертей (HR не показал значимого различия)", "conclusion": "Исследование не показало повышенного риска сердечно-сосудистой смертности при добавлении розиглитазона к метформину."}, {"num": "5", "name": "HOME", "year": "2009", "purpose": "Влияние метформина на сердечно-сосудистые исходы у пациентов на инсулинотерапии", "design": "РКИ, плацебо-контроль", "population": "390 (СД2 на инсулине)", "results": "Снижение риска расширенных MACE: на 39% (HR 0.61)", "conclusion": "Добавление метформина к инсулину снижает риск сердечно-сосудистых событий."}, {"num": "6", "name": "SPREAD-DIMCAD", "year": "2013", "purpose": "Сравнение метформина и глипизида у пациентов с СД2 и ИБС", "design": "РКИ", "population": "304 (СД2 + ИБС)", "results": "Снижение риска расширенных MACE: на 46% (HR 0.54)", "conclusion": "Метформин предпочтительнее глипизида у пациентов с СД2 и ишемической болезнью сердца."}, {"num": "Сахарный диабет", "name": "UKPDS 34", "year": "1998", "purpose": "Эффективность метформина у пациентов с СД2 и избыточным весом", "design": "РКИ, проспективное", "population": "1704", "results": "Снижение риска:\n- Общая смертность: на 36%\n- Инфаркт миокарда: на 39%\n- Любые диабет-ассоциированные исходы: на 18%", "conclusion": "Метформин — первая линия терапии у пациентов с СД2 и избыточным весом, снижающая смертность и риск инфаркта."}, {"num": "Сахарный диабет", "name": "UKPDS (10-летнее наблюдение)", "year": "2008", "purpose": "Долгосрочные эффекты интенсивного гликемического контроля", "design": "РКИ, проспективное", "population": "4209", "results": "Снижение риска:\n- Инфаркт миокарда: на 33%\n- Любые диабет-исходы: на 21%\n- Общая смертность: на 27%", "conclusion": "Раннее применение метформина обеспечивает долгосрочную защиту от макрососудистых осложнений."}, {"num": "Сахарный диабет", "name": "ADOPT", "year": "2006", "purpose": "Сравнение гликемической эффективности метформина, глибурида и розиглитазона", "design": "РКИ, двойное слепое", "population": "4360", "results": "Длительность контроля гликемии: розиглитазон > метформин > глибурид\n- Частота ЖКТ-событий выше на метформине", "conclusion": "Метформин уступает розиглитазону в долгосрочном гликемическом контроле, но превосходит глибурид."}, {"num": "Сахарный диабет", "name": "RECORD", "year": "2009", "purpose": "Сердечно-сосудистая безопасность розиглитазона в комбинации с метформином или сульфонилмочевиной", "design": "РКИ, открытое", "population": "4447", "results": "Сердечно-сосудистая смертность: розиглитазон vs. метформин/сульфонилмочевина: 88 vs. 96 смертей (HR не показал значимого различия)", "conclusion": "Исследование не показало повышенного риска сердечно-сосудистой смертности при добавлении розиглитазона к метформину."}, {"num": "Сахарный диабет", "name": "HOME", "year": "2009", "purpose": "Влияние метформина на сердечно-сосудистые исходы у пациентов на инсулинотерапии", "design": "РКИ, плацебо-контроль", "population": "390", "results": "Снижение риска макрососудистых событий: на фоне метформина\n- Снижение потребности в инсулине и массы тела", "conclusion": "Добавление метформина к инсулину улучшает метаболический контроль и снижает риск макрососудистых событий."}, {"num": "Сахарный диабет", "name": "Исследование Jones et al.", "year": "2002", "purpose": "Эффективность метформина у детей с СД2", "design": "РКИ", "population": "82", "results": "Улучшение гликемического контроля у детей и подростков с СД2", "conclusion": "Метформин эффективен и безопасен для педиатрической популяции с СД2."}, {"num": "Сердечно-сосудистые заболевания", "name": "SPREAD-DIMCAD", "year": "2013", "purpose": "Сравнение метформина и глипизида у пациентов с СД2 и ИБС", "design": "РКИ, двойное слепое", "population": "304", "results": "Снижение риска сердечно-сосудистых событий: на 46% (скорр. HR 0.54)", "conclusion": "Метформин предпочтительнее глипизида у пациентов с СД2 и ишемической болезнью сердца."}, {"num": "Сердечно-сосудистые заболевания", "name": "GIPS-III", "year": "2015", "purpose": "Влияние метформина на сердечно-сосудистый профиль у недиабетических пациентов с острым ИМ", "design": "РКИ, плацебо-контроль", "population": "379", "results": "- ФВ ЛЖ: не улучшилась\n- Скромное улучшение: HbA1c, общего холестерина, ЛПНП и ИМТ", "conclusion": "У недиабетических пациентов с ИМ метформин не улучшает ФВ ЛЖ, но дает скромные метаболические преимущества."}, {"num": "Сердечно-сосудистые заболевания", "name": "Исследование при СНнФВ", "year": "2020", "purpose": "Влияние метформина на потребление кислорода миокардом у пациентов с СНнФВ", "design": "РКИ, плацебо-контроль", "population": "36", "results": "Снижение потребления кислорода миокардом: на 17% (p=0.01)", "conclusion": "Метформин может улучшать энергетический метаболизм миокарда у пациентов с СНнФВ."}, {"num": "Профилактика диабета", "name": "DPP / DPPOS", "year": "2002 / 2025", "purpose": "Профилактика СД2 у лиц с предиабетом", "design": "РКИ, плацебо-контроль", "population": "3234", "results": "Снижение риска развития СД2:\n- Через 3 года: на 31%\n- За 21 год: сохраняется профилактический эффект", "conclusion": "Метформин эффективен для долгосрочной профилактики СД2 у лиц с предиабетом."}, {"num": "Онкология", "name": "MA.32", "year": "2022", "purpose": "Влияние метформина на выживаемость без инвазивных рецидивов (iDFS) при раннем раке молочной железы", "design": "РКИ, плацебо-контроль, фаза III", "population": "3643", "results": "iDFS: не улучшилась\n- Метаболические факторы: улучшились (инсулин, глюкоза, лептин, CRP)", "conclusion": "Добавление метформина к стандартной терапии не улучшает выживаемость при раннем раке молочной железы."}, {"num": "Онкология", "name": "METTEN", "year": "2018", "purpose": "Добавление метформина к неоадъювантной химиотерапии у пациентов с HER2+ раком молочной железы", "design": "РКИ, фаза II, открытое", "population": "144", "results": "pCR: нет различий", "conclusion": "Добавление метформина не увеличивает частоту полного патоморфологического ответа."}, {"num": "Онкология", "name": "I-SPY2", "year": "2021", "purpose": "Оценка режима паклитаксел + ганитумаб + метформин (PGM) при HER2- раке молочной железы", "design": "РКИ, адаптивное, фаза II", "population": "234", "results": "pCR: увеличение, но не достигло预设ного порога", "conclusion": "Режим PGM показал сигнал эффективности, но требует дальнейшего изучения."}, {"num": "Онкология", "name": "MANSMED", "year": "2021", "purpose": "Добавление метформина к андроген-депривационной терапии (АДТ) при распространенном раке предстательной железы", "design": "РКИ", "population": "144", "results": "Выживаемость без кастрационно-резистентного рака (CRPC-FS): улучшение", "conclusion": "Метформин может отсрочить развитие кастрационно-резистентного рака предстательной железы."}, {"num": "Онкология", "name": "Исследование при колоректальном раке", "year": "—", "purpose": "Профилактика колоректального рака у пациентов с аденомами и повышенным ИМТ", "design": "РКИ, фаза IIa", "population": "—", "results": "Изучается возможность снижения риска колоректального рака", "conclusion": "Предварительные данные требуют подтверждения."}, {"num": "Онкология", "name": "Исследование при раке поджелудочной железы", "year": "—", "purpose": "Добавление метформина к гемцитабину и эрлотинибу при распространенном раке поджелудочной железы", "design": "РКИ, плацебо-контроль, фаза II", "population": "—", "results": "Исходы не улучшились", "conclusion": "Добавление метформина не дает преимуществ при распространенном раке поджелудочной железы."}, {"num": "Репродуктивные заболевания", "name": "Исследование при преэклампсии", "year": "2020", "purpose": "Профилактика преэклампсии у беременных с ожирением", "design": "РКИ, плацебо-контроль", "population": "357", "results": "Снижение риска преэклампсии: на 83% (OR 0.17)", "conclusion": "Метформин может существенно снизить риск преэклампсии у беременных с ожирением."}, {"num": "Репродуктивные заболевания", "name": "Исследование при преждевременных родах", "year": "2021", "purpose": "Пролонгирование беременности при преждевременной преэклампсии", "design": "РКИ, плацебо-контроль", "population": "180", "results": "Медиана пролонгации беременности: 17.5 vs. 7.9 дней (p=0.057)", "conclusion": "Тенденция к пролонгированию беременности требует подтверждения."}, {"num": "Репродуктивные заболевания", "name": "Исследование при СПКЯ", "year": "2019", "purpose": "Влияние метформина на исходы беременности у пациенток с СПКЯ", "design": "РКИ, плацебо-контроль", "population": "487", "results": "Снижение риска выкидыша и преждевременных родов: тенденция (OR 0.50, p=0.08)", "conclusion": "Тенденция к улучшению исходов беременности требует подтверждения."}, {"num": "Нейродегенеративные заболевания", "name": "Исследование когнитивного снижения", "year": "2020", "purpose": "Влияние метформина на скорость когнитивного снижения у пожилых", "design": "Проспективное, наблюдательное", "population": "1037", "results": "Связь с более медленным снижением когнитивных функций: OR 5.29 (p=0.05)", "conclusion": "Метформин может замедлять когнитивное снижение, но требуются РКИ."}, {"num": "COVID-19", "name": "Исследование при COVID-19", "year": "2020", "purpose": "Влияние приема метформина на исходы у госпитализированных пациентов с СД2 или ожирением", "design": "Ретроспективное", "population": "1213", "results": "- Снижение сердечной недостаточности и маркеров воспаления\n- Низкое соотношение нейтрофилов к лимфоцитам", "conclusion": "Прием метформина ассоциирован с более благоприятными исходами у пациентов с COVID-19."}]}, {"key": "kardiva", "name": "КАРДИВА", "catRu": "Кардиология · ХСН", "catUz": "Кардиология · СЮН", "trials": [{"num": "1", "name": "US Carvedilol Trial", "year": "1996", "purpose": "Влияние на смертность и госпитализации при ХСН", "design": "РКИ, плацебо-контроль (объединённый анализ 4 исследований)", "population": "1094", "results": "Снижение риска общей смертности на 65% (95% ДИ 39–80%)", "conclusion": "Значительное снижение риска смерти при ХСН (методологические ограничения)."}, {"num": "2", "name": "PRECISE", "year": "1996", "purpose": "Влияние на симптомы и толерантность к нагрузке при ХСН ср./тяж. степени", "design": "РКИ, плацебо-контроль, двойное слепое, 6 мес.", "population": "278 (ФВ ЛЖ ≤35%)", "results": "Улучшение NYHA (p=0.014), глобальной оценки (p<0.001), ФВ ЛЖ (p<0.001), снижение комбинированного риска заболеваемости/смертности (p=0.029)", "conclusion": "Карведилол даёт клинические преимущества на фоне стандартной терапии."}, {"num": "3", "name": "MOCHA", "year": "1996", "purpose": "Влияние на толерантность к нагрузке и выживаемость", "design": "РКИ, плацебо-контроль, двойное слепое", "population": "345", "results": "Дозозависимое улучшение функции ЛЖ и показателей выживаемости", "conclusion": "Подтверждены дозозависимые положительные эффекты."}, {"num": "4", "name": "Australia-New Zealand Trial", "year": "1997", "purpose": "Эффективность при ХСН", "design": "РКИ, плацебо-контроль", "population": "415", "results": "Снижение риска (смертность + все госпитализации) на ~25% за 18–24 мес.", "conclusion": "Снижает комбинированный риск."}, {"num": "5", "name": "CAPRICORN", "year": "2001", "purpose": "Эффективность после ИМ с дисфункцией ЛЖ", "design": "РКИ, плацебо-контроль, двойное слепое", "population": "1959 (ФВ ЛЖ ≤40%, в течение 21 дня после ИМ)", "results": "Снижение общей смертности на 23% (p=0.03), сердечно-сосудистой на 25%", "conclusion": "Достоверно снижает смертность у пациентов с дисфункцией ЛЖ после ИМ."}, {"num": "6", "name": "COPERNICUS", "year": "2001", "purpose": "Эффективность при тяжёлой ХСН (IV ФК по NYHA)", "design": "РКИ, плацебо-контроль, двойное слепое", "population": "2289 (ФВ ЛЖ <25%)", "results": "Снижение риска: общей смертности на 35%, смертности+госпитализации на 24%, сердечно-сосудистой смертности на 27%, госпитализаций по поводу ХСН на 31%", "conclusion": "Достоверно снижает смертность и госпитализации у пациентов с тяжёлой ХСН."}, {"num": "7", "name": "COMET", "year": "2003", "purpose": "Сравнение с метопрололом тартратом при ХСН", "design": "РКИ, двойное слепое, активный контрол", "population": "3029 (ХСН II–IV ФК, ФВ ЛЖ ≤35%)", "results": "Карведилол vs. метопролол: общая смертность 34% vs. 40% (HR=0.83, p=0.0017), сердечно-сосудистая 30% vs. 35%, внезапная смерть 14% vs. 17%", "conclusion": "Карведилол превосходит метопролол тартрат по снижению общей и сердечно-сосудистой смертности."}, {"num": "8", "name": "CHRISTMAS", "year": "2003", "purpose": "Связь прироста ФВ ЛЖ с гибернирующим миокардом", "design": "РКИ, двойное слепое, плацебо-контроль, 6 мес.", "population": "305 (после рандомизации)", "results": "Прирост ФВ ЛЖ на карведилоле в среднем на 3.2% больше, чем на плацебо (p=0.0001). Наличие гибернации – не предиктор, но больший объём поражения → больший прирост ФВ ЛЖ.", "conclusion": "Эффект частично опосредован улучшением функции гибернирующего/ишемизированного миокарда."}, {"num": "9", "name": "CARMEN", "year": "2004", "purpose": "Сравнение эналаприла, карведилола и их комбинации при лёгкой ХСН", "design": "РКИ, двойное слепое, плацебо-контроль, 18 мес.", "population": "572 (I–III ФК, ФВ ЛЖ <40%)", "results": "Комбинация vs. эналаприл: снижение КСО ЛЖ на 5.4 мл/м² больше (p=0.0015). Карведилол vs. эналаприл: нет значимой разницы. Внутри групп: карведилол снизил КСО на 2.8 мл/м² (p=0.018), комбинация – на 6.3 мл/м² (p=0.0001), эналаприл – нет.", "conclusion": "Раннее применение комбинации иАПФ + карведилол приводит к обратному ремоделированию ЛЖ. Не откладывать назначение β-блокатора."}, {"num": "10", "name": "CAFE", "year": "~2004", "purpose": "Добавление к дигоксину для контроля ЧСС при ФП + ХСН", "design": "РКИ (подробности не уточнены)", "population": "Данные не указаны", "results": "Добавление карведилола даёт лучший контроль ЧСС, улучшение функции ЛЖ и симптомов по сравнению с монотерапией дигоксином.", "conclusion": "Комбинация карведилола и дигоксина эффективна для управления ФП у пациентов с ХСН."}, {"num": "11", "name": "GEMINI", "year": "2005", "purpose": "Сравнение метаболического влияния с метопрололом у диабетиков с АГ", "design": "РКИ, двойное слепое, активный контрол, 35 нед.", "population": "1235 (карведилол 498, метопролол 737)", "results": "Карведилол не ухудшал HbA1c (в отличие от метопролола), улучшал HOMA-IR, меньше прибавка веса, меньше симптомов диабета.", "conclusion": "Карведилол имеет сопоставимую антигипертензивную эффективность, но более благоприятный метаболический профиль."}, {"num": "12", "name": "SATELLITE", "year": "2007", "purpose": "Эффективность, переносимость и дозы в реальной практике", "design": "Проспективное наблюдательное исследование, 6 мес.", "population": "3748 (амбулаторные пациенты с ХСН, ранее не получавшие β-блокаторы)", "results": "Клиническое улучшение (NYHA, симптомы), улучшение самочувствия. ПЭ: 6.5% (3 мес.) и 5% (6 мес.) – усталость, гипотензия, головокружение. Отмена у 63, смертей 55 (1.5%), госпитализаций 520 (13%). Средняя доза 31±11 мг/сут.", "conclusion": "Начало терапии и титрование в реальной практике выполнимо и безопасно."}, {"num": "13", "name": "CATHEDRAL-HF (2025)", "year": "2025", "purpose": "Монотерапия карведилолом при ХСН с улучшенной ФВ (HFimpEF)", "design": "РКИ, результаты ещё не опубликованы", "population": "Пациенты с улучшенной ФВ", "results": "Результаты ожидаются", "conclusion": "Изучается роль карведилола как единственной терапии в этой популяции."}, {"num": "14", "name": "HFimpEF (пилотное)", "year": "2025", "purpose": "Возможность перевода на монотерапию карведилолом после улучшения ФВ", "design": "Рандомизированное открытое пилотное одноцентровое, 52 нед.", "population": "60 (исходная ФВ ≤40%, текущая ≥50%)", "results": "Рецидив дисфункции ЛЖ: 14.8% в группе монотерапии vs. 15.4% в группе контроля. Госпитализаций и смертей не было.", "conclusion": "Впервые показана возможность отмены другой терапии при сохранении карведилола."}]}, {"key": "dilyutiks", "name": "ДИЛЮТИКС", "catRu": "Кардиология · Антиагрегант", "catUz": "Кардиология · Антиагрегант", "trials": [{"num": "1", "name": "CAPRIE", "year": "1996", "purpose": "Сравнить монотерапию клопидогрелом и аспирином для вторичной профилактики у пациентов с атеротромботическими заболеваниями.", "design": "Рандомизированное, двойное слепое, многоцентровое.\nНедавний ИМ, ишемический инсульт или ПАД.", "population": "19185", "results": "Первичная точка (ИМ, инсульт, сосудистая смерть): 9.8% (клопидогрел) vs. 10.6% (аспирин) → RRR 8.7% (p=0.045).", "conclusion": "Клопидогрел незначительно, но статистически значимо превосходит аспирин в монотерапии при атеротромбозе."}, {"num": "3", "name": "CURE", "year": "2001", "purpose": "Оценить эффективность и безопасность комбинации клопидогрел + аспирин при ОКС без подъема ST.", "design": "Рандомизированное, двойное слепое, плацебо-контролируемое.", "population": "12562", "results": "Первичная точка (СС смерть, ИМ, инсульт): 9.3% vs. 11.4% (RRR 20%; p<0.001). Большие кровотечения: 3.7% vs. 2.7%.", "conclusion": "Комбинация эффективнее монотерапии аспирином, но повышает риск больших кровотечений."}, {"num": "4", "name": "CREDO", "year": "2002", "purpose": "Сравнить длительную (12 мес) и короткую (1 мес) двойную антитромбоцитарную терапию после ЧКВ.", "design": "Рандомизированное, двойное слепое.", "population": "2116", "results": "Относительное снижение риска (смерть, ИМ, инсульт) на 26.9% через 1 год в пользу 12-месячной терапии.", "conclusion": "Длительная ДАТТ после ЧКВ снижает ишемические события по сравнению с коротким курсом."}, {"num": "5", "name": "COMMIT", "year": "2005", "purpose": "Оценить добавление клопидогрела к аспирину у пациентов с ИМпST.", "design": "Рандомизированное, двойное слепое, плацебо-контролируемое, факторный дизайн.", "population": "45852", "results": "Смерть, реинфаркт или инсульт через 28 дней: 9.2% vs. 10.1% (снижение на 9%; p=0.002). Кровотечения: 0.58% vs. 0.55% (p=0.59).", "conclusion": "Добавление клопидогрела улучшает исходы без значимого увеличения кровотечений."}, {"num": "6", "name": "CLARITY-TIMI 28", "year": "2005", "purpose": "Оценить влияние клопидогрела на проходимость инфаркт-связанной артерии у пациентов с ИМпST, получающих тромболизис.", "design": "Рандомизированное, двойное слепое, плацебо-контролируемое.", "population": "3491", "results": "Окклюзия артерии, смерть или рецидив ИМ: 15.0% vs. 21.7% (ORR 36%; p<0.001). Большие кровотечения по TIMI: 1.3% vs. 1.1%.", "conclusion": "Клопидогрел улучшает проходимость артерии и снижает ишемические события после тромболизиса."}, {"num": "7", "name": "CHARISMA", "year": "2006", "purpose": "Сравнить комбинацию клопидогрел+аспирин vs аспирин у стабильных пациентов с высоким риском или документированными ССЗ.", "design": "Рандомизированное, двойное слепое, плацебо-контролируемое.", "population": "15603", "results": "Первичная точка (ИМ, инсульт, СС смерть) не достигла значимости в общей популяции (p=0.22).", "conclusion": "Двойная терапия не дает преимущества у стабильных пациентов (кроме подгрупп с явным атеротромбозом)."}, {"num": "8", "name": "TRITON-TIMI 38", "year": "2007", "purpose": "Сравнить прасугрел и клопидогрел у пациентов с ОКС, подвергающихся ЧКВ.", "design": "Рандомизированное, двойное слепое.", "population": "13608", "results": "Прасугрел снизил СС смерть, ИМ, инсульт (HR 0.81; p<0.001), но увеличил большие кровотечения (2.4% vs. 1.8%).", "conclusion": "Прасугрел превосходит клопидогрел по ишемической эффективности, но с более высоким риском геморрагий."}, {"num": "9", "name": "PLATO", "year": "2009", "purpose": "Сравнить тикагрелор и клопидогрел у пациентов с ОКС (с подъемом и без подъема ST).", "design": "Рандомизированное, двойное слепое.", "population": "18624", "results": "Первичная точка (СС смерть, ИМ, инсульт): 9.8% vs. 11.7% (HR 0.84; p<0.001). Кровотечения: 11.6% vs. 11.2% (p=0.43).", "conclusion": "Тикагрелор превосходит клопидогрел по снижению ишемии без увеличения больших кровотечений."}, {"num": "10", "name": "ACTIVE-A", "year": "2009", "purpose": "Оценить комбинацию клопидогрел+аспирин vs аспирин у пациентов с фибрилляцией предсердий, не подходящих для варфарина.", "design": "Рандомизированное, двойное слепое, плацебо-контролируемое.", "population": "7554", "results": "Снижение риска (инсульт, ИМ, системная эмболия, СС смерть) на 11% (p=0.01). Больше больших кровотечений.", "conclusion": "Комбинация снижает сосудистые события, но повышает риск кровотечений у пациентов с ФП."}, {"num": "11", "name": "CURRENT-OASIS 7", "year": "2010", "purpose": "Сравнить высокую и низкую дозу клопидогрела у пациентов с ОКС, получающих инвазивную стратегию.", "design": "Рандомизированное, двойное слепое (для клопидогреля).", "population": "25086", "results": "Первичная точка (СС смерть, ИМ, инсульт) через 30 дней: 4.2% vs. 4.4% (p=0.30). Большие кровотечения: 2.5% vs. 2.0% (p=0.01).", "conclusion": "Высокая доза не дает преимущества в снижении ишемии, но увеличивает риск кровотечений."}, {"num": "12", "name": "CASCADE", "year": "2010", "purpose": "Оценить влияние добавления клопидогрела к аспирину на гиперплазию интимы в венозных шунтах после АКШ.", "design": "Двойное слепое, рандомизированное II фазы.", "population": "113", "results": "Площадь интимы через год: 4.1 vs. 4.5 мм² (p=0.44); проходимость шунтов: 95.2% vs. 95.5% (p=0.90).", "conclusion": "Добавление клопидогреля не уменьшает гиперплазию интимы в венозных шунтах через год."}, {"num": "13", "name": "CHANCE", "year": "2013", "purpose": "Сравнить комбинацию клопидогрел+аспирин vs аспирин у китайских пациентов с малым инсультом/ТИА.", "design": "Рандомизированное, двойное слепое, плацебо-контролируемое.", "population": "5170", "results": "Риск нового инсульта через 90 дней: 8.2% vs. 11.7% (p<0.001). Частота кровотечений не различалась.", "conclusion": "Комбинация в течение 3 недель превосходит монотерапию аспирином без увеличения геморрагий."}, {"num": "14", "name": "WOEST", "year": "2013", "purpose": "Сравнить двойную (варфарин+клопидогрел) и тройную (варфарин+аспирин+клопидогрел) терапию у пациентов на варфарине после ЧКВ.", "design": "Открытое, рандомизированное.", "population": "573", "results": "Значительное снижение кровотечений в группе двойной терапии (HR 0.36; p<0.001); тромботические события не различались.", "conclusion": "Двойная терапия безопаснее тройной и не уступает по эффективности."}, {"num": "15", "name": "ISAR-TRIPLE", "year": "2015", "purpose": "Сравнить короткий (6 нед) и длительный (6 мес) курс тройной терапии у пациентов на ОАК после имплантации стента с лекарственным покрытием.", "design": "Рандомизированное, открытое.", "population": "614", "results": "Первичная точка (смерть, ИМ, тромбоз стента, инсульт, большое кровотечение) через 9 мес: 9.8% vs. 8.8% (HR 1.14; p=0.63).", "conclusion": "Короткий курс не уступает длительному по безопасности/эффективности."}, {"num": "16", "name": "POINT", "year": "2018", "purpose": "Сравнить комбинацию клопидогрел+аспирин vs аспирин у пациентов с малым инсультом/ТИА (международное).", "design": "Рандомизированное, двойное слепое, плацебо-контролируемое.", "population": "4881", "results": "Ишемические события (инсульт, ИМ) через 90 дней: 5.0% vs. 6.5% (p=0.02). Большие кровотечения: 0.9% vs. 0.4% (p=0.02).", "conclusion": "Комбинация снижает ишемию, но увеличивает риск больших кровотечений; польза перевешивает у пациентов с высоким риском."}, {"num": "17", "name": "Биоэквивалентность (Клопидогрел-АБ vs. Плавикс)", "year": "2024", "purpose": "Оценить биоэквивалентность генерической версии (Клопидогрел-АБ) и оригинального препарата (Плавикс).", "design": "Открытое, рандомизированное, перекрестное. Здоровые добровольцы.", "population": "36", "results": "Подтверждена биоэквивалентность по всем фармакокинетическим параметрам.", "conclusion": "Генерик биоэквивалентен оригинальному препарату."}, {"num": "18", "name": "Сравнение Ареплекс vs. Плавикс", "year": "2025", "purpose": "Оценить биоэквивалентность и переносимость генерика Ареплекс и оригинального Плавикса у пациентов с ИБС.", "design": "Сравнительное исследование. Пациенты с ИБС.", "population": "44", "results": "Доказана биоэквивалентность и сопоставимый профиль безопасности.", "conclusion": "Генерик Ареплекс может быть рекомендован для клинического применения."}, {"num": "19", "name": "TADCLOT", "year": "2025", "purpose": "Сравнить тикагрелор (стандартный режим) и клопидогрел в двукратной дозе у пациентов с ИМпST после первичного ЧКВ.", "design": "Двойное слепое, рандомизированное исследование превосходства.", "population": "2201", "results": "MACEs через 1 мес: 2.2% (тикагрелор) vs. 2.9% (клопидогрел) (HR 0.75; p=0.28). Кровотечения: 0.5% vs. 0.4%.", "conclusion": "Тикагрелор не превзошел клопидогрел при двукратном приеме последнего."}, {"num": "20", "name": "ARCTURUS-GTC-1", "year": "План: 2027–2032", "purpose": "Сравнить клопидогрел и аспирин для долгосрочной вторичной профилактики у пациентов с хроническим коронарным синдромом.", "design": "Рандомизированное, открытое, многоцентровое.", "population": "6 740 (план)", "results": "Активный набор пациентов, результаты ожидаются.", "conclusion": "Цель — определить, превосходит ли клопидогрел аспирин в долгосрочной профилактике."}]}, {"key": "dorepam", "name": "ДОРЕПАМ", "catRu": "Психиатрия · Депрессия", "catUz": "Психиатрия · Депрессия", "trials": [{"num": "1", "name": "Первое фиксированное-дозовое исследование БДР", "year": "~2002", "purpose": "Оценить эффективность и безопасность эсциталопрама в дозах 10 и 20 мг/сут при БДР.", "design": "РКИ, двойное слепое, плацебо-контролируемое, 8 нед.", "population": "~366", "results": "Обе дозы значимо улучшали MADRS по сравнению с плацебо.", "conclusion": "Эсциталопрам 10–20 мг/сут эффективен при БДР у взрослых."}, {"num": "2", "name": "Второе фиксированное-дозовое исследование БДР", "year": "~2002", "purpose": "Оценить эффективность эсциталопрама 10 мг/сут при БДР.", "design": "РКИ, двойное слепое, плацебо-контролируемое, 8 нед.", "population": "н/д", "results": "Доза 10 мг/сут значимо лучше плацебо по MADRS.", "conclusion": "Доза 10 мг/сут эффективна для острого лечения БДР."}, {"num": "3", "name": "Гибкое-дозовое исследование БДР", "year": "~2002", "purpose": "Сравнить эсциталопрам (10–20 мг/сут) и циталопрам (20–40 мг/сут) с плацебо при БДР.", "design": "РКИ, двойное слепое, активно-контролируемое, 8 нед.", "population": "н/д", "results": "Эсциталопрам значимо лучше плацебо по MADRS.", "conclusion": "Гибкие дозы эсциталопрама эффективны при БДР."}, {"num": "4", "name": "Исследование по предотвращению рецидивов БДР", "year": "~2002", "purpose": "Оценить эффективность длительной терапии эсциталопрамом для предотвращения рецидивов.", "design": "Двойное слепое, плацебо-контролируемое, до 36 нед.", "population": "274", "results": "Пациенты на эсциталопраме имели более длительное время до рецидива vs. плацебо.", "conclusion": "Длительная терапия эффективна для профилактики рецидивов БДР."}, {"num": "5", "name": "Исследование ГТР (первое)", "year": "2005", "purpose": "Оценить эффективность эсциталопрама (10–20 мг/сут) при ГТР.", "design": "РКИ, двойное слепое, плацебо-контролируемое, гибкое дозирование.", "population": "~284", "results": "Частота ответа на 8-й нед: 68% (эсциталопрам) vs. 41% (плацебо), p<0.01.", "conclusion": "Эсциталопрам эффективен, безопасен и хорошо переносится при ГТР."}, {"num": "6", "name": "Другие исследования ГТР", "year": "2005", "purpose": "Продемонстрировать эффективность эсциталопрама при ГТР.", "design": "Четыре плацебо-контролируемых РКИ (одно с фиксированной дозой).", "population": "н/д", "results": "Результаты подтвердили эффективность.", "conclusion": "Эсциталопрам эффективен для лечения ГТР."}, {"num": "7", "name": "Robinson RG et al. (JAMA)", "year": "2008", "purpose": "Оценить, снижает ли эсциталопрам частоту развития депрессии в первый год после инсульта.", "design": "Многоцентровое РКИ, 12 мес, 3 группы: эсциталопрам (двойной слепой vs. плацебо) и PST (открытое).", "population": "176 не депрессивных пациентов после инсульта (эсциталопрам n=59, плацебо n=58, PST n=59).", "results": "Частота депрессии: 8.5% (эсциталопрам) vs. 22.4% (плацебо), скорр. HR=4.5 (p<0.001). PST: 11.9% (p<0.001 vs. плацебо). ITT: 23.1% vs. 34.5% (p=0.007).", "conclusion": "Эсциталопрам значимо снижает заболеваемость депрессией у не депрессивных пациентов после инсульта."}, {"num": "8", "name": "Исследование БДР у подростков (12–17 лет)", "year": "~2009", "purpose": "Оценить эффективность и безопасность эсциталопрама (10–20 мг/сут) у подростков с БДР.", "design": "РКИ, двойное слепое, плацебо-контролируемое, 8 нед.", "population": "н/д", "results": "Эсциталопрам значимо улучшал CDRS-R по сравнению с плацебо.", "conclusion": "Эсциталопрам эффективен для лечения БДР у подростков 12–17 лет."}, {"num": "9", "name": "Cipriani A et al. (Lancet) — сетевой мета-анализ", "year": "2009", "purpose": "Сравнить эффективность и приемлемость 12 антидепрессантов нового поколения при БДР.", "design": "Сетевой мета-анализ 117 РКИ.", "population": "25 928 пациентов из 117 РКИ.", "results": "Эсциталопрам и сертралин показали наилучшее соотношение эффективности и переносимости.", "conclusion": "Эсциталопрам и сертралин — препараты первого выбора при БДР."}, {"num": "10", "name": "Cipriani A et al. (Кокрейн)", "year": "2009", "purpose": "Оценить доказательства эффективности и переносимости эсциталопрама по сравнению с другими антидепрессантами при БДР.", "design": "Систематический обзор и мета-анализ РКИ.", "population": "22 РКИ, сравнивающих эсциталопрам с другими.", "results": "Эсциталопрам значимо эффективнее циталопрама (ОШ ответа 0.67, ремиссии 0.53). Реже прекращали лечение, чем дулоксетин.", "conclusion": "Эсциталопрам имеет преимущества по эффективности и переносимости перед некоторыми антидепрессантами."}, {"num": "11", "name": "Исследование панического расстройства", "year": "~2010", "purpose": "Оценить эффективность и безопасность эсциталопрама при паническом расстройстве.", "design": "РКИ, двойное слепое, плацебо-контролируемое.", "population": "н/д", "results": "Эсциталопрам и циталопрам значимо снижали симптомы панического расстройства vs. плацебо.", "conclusion": "Эсциталопрам эффективен, безопасен и хорошо переносится при паническом расстройстве."}, {"num": "12", "name": "Cipriani A et al. (2011) — сетевой мета-анализ", "year": "2011", "purpose": "Провести сетевой мета-анализ для сравнения эффективности и приемлемости эсциталопрама с другими антидепрессантами.", "design": "Сетевой мета-анализ 117 РКИ (включая 15 неопубликованных).", "population": "117 РКИ (1991–2007).", "results": "Эсциталопрам, миртазапин, сертралин и венлафаксин превосходили другие по частоте ответа; эсциталопрам и сертралин — лучший профиль приемлемости.", "conclusion": "Существуют клинически значимые различия между антидепрессантами по эффективности и переносимости."}, {"num": "13", "name": "Исследование ОКР (эсциталопрам vs. сертралин)", "year": "~2011", "purpose": "Сравнить эффективность эсциталопрама и сертралина при ОКР.", "design": "Сравнительное двойное слепое РКИ.", "population": "~43 (эсциталопрам n≈21, сертралин n≈22).", "results": "Снижение YBOCS >34%: 70% (эсциталопрам) vs. 76.19% (сертралин), p=0.531.", "conclusion": "Эсциталопрам столь же эффективен, как и сертралин, при лечении ОКР."}, {"num": "14", "name": "Исследование профилактики ПТСР", "year": "2015", "purpose": "Оценить эффективность эсциталопрама в предотвращении ПТСР.", "design": "Пилотное РКИ, плацебо-контролируемое, 24 нед.", "population": "н/д", "results": "Значительное снижение баллов CAPS на протяжении лечения (F(7,142)=41.58).", "conclusion": "Эсциталопрам может быть эффективен для предотвращения ПТСР."}, {"num": "15", "name": "Kim JS et al. (EMOTION)", "year": "2017", "purpose": "Оценить эффективность раннего назначения эсциталопрама для снижения умеренных/тяжёлых депрессивных симптомов и улучшения функций у пациентов с острым инсультом.", "design": "Многоцентровое, двойное слепое, РКИ, плацебо-контролируемое.", "population": "478 пациентов с острым инсультом (эсциталопрам n=~241, плацебо n=~237).", "results": "Эсциталопрам не показал статистически значимого снижения умеренных/тяжёлых депрессивных симптомов vs. плацебо.", "conclusion": "Раннее назначение эсциталопрама при остром инсульте не привело к значимому снижению умеренной/тяжёлой депрессии."}, {"num": "16", "name": "Lee EJ et al. (пост-анализ EMOTION)", "year": "2018", "purpose": "Сравнить терапевтический ответ на эсциталопрам и клинические предикторы ПСД через 3 мес у пациентов с депрессией на исходном уровне и без неё.", "design": "Пост-анализ данных РКИ EMOTION. Группы: Baseline-Pink (MADRS<8, n=203) и Baseline-Blue (MADRS≥8, n=275).", "population": "478 пациентов с острым инсультом.", "results": "Эффективность эсциталопрама в снижении риска ПСД была более выражена в группе Baseline-Pink (p взаимодействия=0.058). Факторы риска различались.", "conclusion": "Ответ на эсциталопрам зависит от наличия депрессии на исходном уровне. Патофизиология ПСД гетерогенна, необходимы дифференцированные стратегии."}, {"num": "17", "name": "Lee EJ et al. (пост-анализ локализации)", "year": "2020", "purpose": "Изучить, различается ли эффект эсциталопрама на отдельные симптомы ПСД и в зависимости от локации очага инсульта.", "design": "Пост-анализ EMOTION. Оценка по 10 пунктам MADRS. Группы: \"Midbrain-Pons\", \"Frontal-Subcortical\", \"Others\".", "population": "478 (эсциталопрам n=241, плацебо n=237).", "results": "Общее снижение MADRS значимо больше в группе эсциталопрама. Значимый эффект отмечен только для 3 пунктов (видимая печаль, сообщаемая печаль, пессимистические мысли). У пациентов с поражением Frontal-Subcortical эффект был значимо лучше (p=0.005).", "conclusion": "Эффект эсциталопрама при ПСД может быть более выражен у пациентов с определёнными симптомами и локацией очага, что требует персонализированного подхода."}, {"num": "18", "name": "Feng RF et al. (мета-анализ)", "year": "2022", "purpose": "Оценить эффективность и безопасность эсциталопрама при постинсультной депрессии.", "design": "Систематический обзор и мета-анализ РКИ (поиск до мая 2021).", "population": "11 исследований, 1374 участника.", "results": "Снижение баллов депрессии: SMD = -1.25 (p<0.001). Снижение риска развития ПСД: RR = 0.52 (p=0.007). Безопасен, отмечено улучшение двигательной функции.", "conclusion": "Эсциталопрам играет потенциально эффективную роль в лечении ПСД и безопасен. Однако результаты по двигательной функции и сонливости требуют дальнейшего изучения."}, {"num": "19", "name": "Yan N et al. (BMC Psychiatry)", "year": "2024", "purpose": "Сравнить безопасность и эффективность эсциталопрама и сертралина у пациентов с постинсультной депрессией.", "design": "Рандомизированное контролируемое исследование, 8 нед, гибкие дозы.", "population": "60 пациентов (40–89 лет) с ПСД (эсциталопрам 10–20 мг/сут n=30, сертралин 50–200 мг/сут n=30).", "results": "Значимое снижение HAMD-24 и HAMA-14 в обеих группах (p<0.01). Эсциталопрам показал большее снижение HAMD-24 (p<0.05). По тревоге, когнитивной функции и повседневной активности группы сопоставимы.", "conclusion": "Оба препарата сопоставимы по влиянию на тревогу, когнитивные функции и повседневную активность, но эсциталопрам более предпочтителен для облегчения депрессивных симптомов."}, {"num": "20", "name": "Исследование мемантина как дополнения к эсциталопраму при ОКР", "year": "2025", "purpose": "Оценить, дает ли добавление мемантина к эсциталопраму дополнительные преимущества при лечении ОКР.", "design": "РКИ, двойное слепое, плацебо-контролируемое, 16 нед.", "population": "н/д", "results": "Обе схемы значительно облегчали симптомы ОКР, но мемантин не дал заметных преимуществ по сравнению с монотерапией.", "conclusion": "Добавление мемантина к эсциталопраму не дает значительных преимуществ при лечении ОКР."}]}, {"key": "evalep", "name": "ЭВАЛЕП", "catRu": "Неврология · Эпилепсия", "catUz": "Неврология · Эпилепсия", "trials": [{"num": "1", "name": "NCT00015769 (LEV при биполярном расстройстве)", "year": "2001", "purpose": "Оценить эффективность LEV у пациентов с биполярным расстройством, резистентных к стандартной терапии.", "design": "Пилотное, фаза 2.", "population": "Пациенты с биполярным расстройством (n н/д).", "results": "Завершено, результаты не опубликованы.", "conclusion": "Исследование завершено."}, {"num": "2", "name": "Исследование 2 (дополнительная терапия парциальных приступов)", "year": "2005", "purpose": "Оценить эффективность LEV в дозах 1000 и 3000 мг/сут при рефрактерных парциальных приступах.", "design": "Двойное слепое, РКИ, плацебо-контролируемое, параллельное, многоцентровое.", "population": "293 (плацебо n=95; 1000 мг n=97; 3000 мг n=101).", "results": "Снижение частоты приступов vs плацебо: 26.1% (1000 мг) и 30.1% (3000 мг), p<0.05.", "conclusion": "Леветирацетам эффективен как дополнительная терапия при парциальных приступах."}, {"num": "3", "name": "Исследование 3 (дополнительная терапия парциальных приступов)", "year": "2005", "purpose": "Оценить эффективность LEV в дозах 1000 и 2000 мг/сут при рефрактерных парциальных приступах.", "design": "Двойное слепое, РКИ, плацебо-контролируемое, перекрёстное (первый период анализировался как параллельное).", "population": "322 (плацебо n=111; 1000 мг n=106; 2000 мг n=105).", "results": "Снижение частоты vs плацебо: 17.1% (1000 мг) и 21.4% (2000 мг), p<0.05.", "conclusion": "Эффективен как дополнительная терапия."}, {"num": "4", "name": "Исследование 4 (дополнительная терапия парциальных приступов)", "year": "2005", "purpose": "Оценить эффективность LEV в дозе 3000 мг/сут при рефрактерных парциальных приступах.", "design": "Двойное слепое, РКИ, плацебо-контролируемое, параллельное.", "population": "284 (плацебо n=104; 3000 мг n=180).", "results": "Снижение частоты vs плацебо: 23.0%, p<0.05.", "conclusion": "Эффективен как дополнительная терапия в дозе 3000 мг/сут."}, {"num": "5", "name": "Исследование 5 (монотерапия парциальных приступов)", "year": "2005", "purpose": "Оценить эффективность LEV в качестве монотерапии при парциальных приступах.", "design": "Двойное слепое, РКИ, плацебо-контролируемое.", "population": "198 (плацебо n=97; LEV n=101).", "results": "Снижение частоты vs плацебо: 26.8%, p<0.05.", "conclusion": "Леветирацетам эффективен как монотерапия."}, {"num": "6", "name": "NCT00160550 (ПГТКП при ИГЭ)", "year": "2005", "purpose": "Оценить безопасность и эффективность LEV при первично-генерализованных тонико-клонических приступах (ПГТКП).", "design": "РКИ, двойное слепое, плацебо-контролируемое, фаза 3.", "population": "Пациенты с ИГЭ и ПГТКП (n н/д).", "results": "Снижение частоты ПГТКП на 77.6% vs 44.6% в плацебо; доля респондеров 60.4% vs 23.7%.", "conclusion": "LEV значительно эффективнее плацебо как дополнительная терапия при ПГТКП."}, {"num": "7", "name": "NCT00175890 (дети 1 мес – 4 года)", "year": "2006", "purpose": "Оценить безопасность и эффективность LEV у детей раннего возраста с парциальными приступами.", "design": "Двойное слепое, плацебо-контролируемое, фаза 3.", "population": "Дети 1 мес – 4 лет с парциальными приступами (n н/д).", "results": "Подтверждена эффективность и безопасность.", "conclusion": "LEV эффективен и безопасен как дополнительная терапия у детей раннего возраста."}, {"num": "8", "name": "UK Epilepsy and Pregnancy Register (предварительные данные)", "year": "2006", "purpose": "Оценить безопасность LEV при беременности на предварительных данных регистра.", "design": "Проспективное обсервационное (регистр).", "population": "Беременные женщины с эпилепсией, принимающие LEV (n н/д).", "results": "Предварительные данные подтвердили низкий риск пороков развития.", "conclusion": "LEV может быть безопасной альтернативой при беременности."}, {"num": "9", "name": "Berkovic S et al. (миоклонические приступы)", "year": "2007", "purpose": "Оценить эффективность LEV при миоклонических приступах у пациентов с идиопатической генерализованной эпилепсией.", "design": "Двойное слепое, плацебо-контролируемое, 16 нед.", "population": "Пациенты ≥12 лет с миоклоническими приступами (n=164).", "results": "LEV показал эффективность в снижении частоты миоклонических приступов.", "conclusion": "LEV эффективен и безопасен при миоклонических приступах."}, {"num": "10", "name": "NCT00280696 (подтверждающее исследование парциальных приступов)", "year": "2007", "purpose": "Подтвердить эффективность LEV у пациентов с парциальными приступами.", "design": "Двойное слепое, подтверждающее, фаза 3.", "population": "Пациенты с парциальными приступами (n н/д).", "results": "Подтверждена эффективность препарата.", "conclusion": "Результаты подтверждают эффективность LEV при парциальных приступах."}, {"num": "11", "name": "Исследование инфантильных спазмов (LEV vs топирамат)", "year": "~2010", "purpose": "Сравнить LEV с топираматом как терапию второй линии при инфантильных спазмах.", "design": "РКИ (качественный анализ).", "population": "20 пациентов с инфантильными спазмами.", "results": "Нет значимой разницы в частоте ответа (RD=2.0%).", "conclusion": "Различий в эффективности LEV и топирамата не выявлено."}, {"num": "12", "name": "Исследование ACTH + LEV при инфантильных спазмах", "year": "~2010", "purpose": "Оценить добавление LEV к стандартной терапии АКТГ при инфантильных спазмах.", "design": "РКИ (качественный анализ).", "population": "100 пациентов с инфантильными спазмами.", "results": "Нет разницы по частоте прекращения приступов (RD=0%).", "conclusion": "Добавление LEV к АКТГ не дает преимуществ."}, {"num": "13", "name": "Исследование LEV при алкогольной зависимости и тревоге", "year": "~2010", "purpose": "Оценить эффективность LEV при лечении алкогольной зависимости и тревожных расстройств.", "design": "Клиническое исследование.", "population": "Пациенты с алкогольной зависимостью и тревогой (n н/д).", "results": "Данные не указаны.", "conclusion": "Исследование завершено."}, {"num": "14", "name": "Исследование LEV при L-ДОПА-индуцированных дискинезиях", "year": "~2010", "purpose": "Оценить эффективность LEV при дискинезиях, вызванных L-ДОПА.", "design": "Клиническое исследование.", "population": "Пациенты с болезнью Паркинсона (n н/д).", "results": "Данные не указаны.", "conclusion": "Исследование завершено."}, {"num": "15", "name": "NCT01392768 (парциальные приступы)", "year": "2011", "purpose": "Оценить эффективность и безопасность LEV для контроля парциальных приступов (с/без вторичной генерализации).", "design": "РКИ, фаза 3.", "population": "126 пациентов (4–65 лет).", "results": "Результаты не опубликованы.", "conclusion": "Исследование зарегистрировано, но не опубликовано."}, {"num": "16", "name": "NCT01506882 (монотерапия при впервые диагностированной фокальной эпилепсии)", "year": "2012", "purpose": "Оценить эффективность и безопасность монотерапии LEV у пациентов с впервые диагностированной фокальной эпилепсией.", "design": "Открытое, фаза 3.", "population": "Пациенты с впервые диагностированной фокальной эпилепсией (n н/д).", "results": "Подтверждена эффективность монотерапии.", "conclusion": "LEV эффективен в качестве монотерапии при впервые диагностированной фокальной эпилепсии."}, {"num": "17", "name": "UK and Ireland epilepsy and pregnancy registers (2013)", "year": "2013", "purpose": "Определить риск крупных врожденных пороков развития (MCM) при приеме LEV во время беременности.", "design": "Проспективное обсервационное (объединенные данные регистров Великобритании и Ирландии).", "population": "671 беременность (304 монотерапия, 367 политерапия).", "results": "MCM монотерапия: 0.70%; политерапия: 5.56%. Комбинация LEV+вальпроат: 6.90%; LEV+карбамазепин: 9.38%.", "conclusion": "Низкий риск MCM при монотерапии LEV; политерапия повышает риск. LEV – безопасная альтернатива вальпроату."}, {"num": "18", "name": "Chen et al. (электрический статус медленного сна – ESES)", "year": "2014", "purpose": "Оценить эффективность LEV при эпилепсии с электрическим статусом медленного сна (ESES).", "design": "Клиническое исследование.", "population": "Пациенты с ESES (n н/д).", "results": "LEV эффективен при ESES.", "conclusion": "LEV может применяться при лечении ESES."}, {"num": "19", "name": "Bansal R et al. (Indian J Pharmacol)", "year": "2018", "purpose": "Проанализировать эффективность и безопасность LEV во время беременности у женщин с эпилепсией.", "design": "Ретроспективное исследование.", "population": "99 женщин (28 получали LEV).", "results": "У LEV лучше контроль приступов, чем у вальпроата (p=0.031); ни одного случая пороков развития у детей от матерей на LEV.", "conclusion": "LEV – препарат первой линии при беременности у женщин с эпилепсией."}, {"num": "20", "name": "ESETT (эпилептический статус)", "year": "2019", "purpose": "Сравнить эффективность LEV, фосфенитоина и вальпроата при установленном эпилептическом статусе.", "design": "Двойное слепое, рандомизированное, адаптивное.", "population": "Пациенты с установленным эпилептическим статусом (n н/д).", "results": "Прекращение приступов в течение 60 мин достигнуто у ~45–46% в каждой группе.", "conclusion": "LEV, фосфенитоин и вальпроат имеют сопоставимую эффективность при установленном эпилептическом статусе."}, {"num": "21", "name": "SANAD II (фокальная эпилепсия, монотерапия)", "year": "2020", "purpose": "Сравнить эффективность и экономическую целесообразность LEV, ламотриджина и зонисамида в качестве начальной монотерапии при впервые диагностированной фокальной эпилепсии.", "design": "Прагматичное, рандомизированное, открытое, контролируемое.", "population": "Пациенты с впервые диагностированной фокальной эпилепсией (n н/д).", "results": "LEV не показал клинической или экономической эффективности по сравнению с ламотриджином и зонисамидом.", "conclusion": "LEV не является предпочтительным препаратом первой линии для начальной монотерапии фокальной эпилепсии."}, {"num": "22", "name": "Sharma SR et al. (Neurol India)", "year": "2021", "purpose": "Оценить эффективность и безопасность LEV во время беременности у женщин с активной эпилепсией.", "design": "Ретроспективное исследование на базе стационара.", "population": "103 женщины (47 монотерапия, 56 политерапия).", "results": "Частота приступов улучшилась у 61.1%; 7 случаев пороков развития (6.79%) – все в группе политерапии.", "conclusion": "Монотерапия LEV – безопасная альтернатива для женщин детородного возраста."}, {"num": "23", "name": "Исследование LEV, LTG и CBZ при беременности (Италия)", "year": "~2022", "purpose": "Сравнить эффективность и безопасность монотерапии LEV, ламотриджина (LTG) и карбамазепина (CBZ) во время беременности.", "design": "Проспективное обсервационное.", "population": "57 беременностей (17 LEV, 11 LTG, 29 CBZ).", "results": "Значительное снижение частоты приступов в I триместре, наиболее выражено в группе LEV (p=0.004); ни одного порока развития в группах LEV и LTG.", "conclusion": "LEV и LTG имеют лучший профиль безопасности по сравнению с CBZ."}, {"num": "24", "name": "Сравнение LEV и бриварацетама (BRV)", "year": "~2023", "purpose": "Сравнить эффективность и безопасность LEV и BRV при эпилепсии.", "design": "Проспективное обсервационное.", "population": "115 пациентов (LEV n=66, BRV n=49).", "results": "BRV лучше переносится при психических побочных эффектах.", "conclusion": "BRV – безопасная альтернатива LEV с меньшим числом побочных эффектов."}, {"num": "25", "name": "Исследование при тяжелой ЧМТ (VPA vs LEV)", "year": "~2024", "purpose": "Сравнить эффективность и безопасность VPA и LEV при тяжелой черепно-мозговой травме.", "design": "Сравнительное исследование.", "population": "Пациенты с тяжелой ЧМТ (n н/д).", "results": "Оба эффективны, но у VPA выше частота НЯ (40.48% vs 21.43%).", "conclusion": "LEV имеет лучший профиль безопасности при сопоставимой эффективности."}, {"num": "26", "name": "Hoeltzenbein M et al. (Embryotox)", "year": "2024", "purpose": "Проанализировать частоту самопроизвольных абортов и крупных пороков развития при приеме LEV в I триместре.", "design": "Когортное исследование на основе данных Центра Embryotox (2000–2017).", "population": "364 беременности с воздействием LEV в I триместре.", "results": "Монотерапия LEV: без значимого увеличения риска пороков или абортов. Комбинация LEV+LTG: значимый рост риска абортов (aHR=3.01).", "conclusion": "Монотерапия LEV безопасна; комбинация LEV+LTG требует дальнейшего изучения."}, {"num": "27", "name": "Stanford Medicine-led study", "year": "2024", "purpose": "Оценить безопасность новых противоэпилептических препаратов во время беременности.", "design": "Крупное популяционное исследование.", "population": "Большая когорта беременных (n н/д).", "results": "Ламотриджин и леветирацетам безопасны для использования во время беременности.", "conclusion": "Эти препараты должны быть препаратами выбора для женщин с эпилепсией, планирующих беременность."}, {"num": "28", "name": "Мета-анализ LEV при педиатрическом судорожном статусе", "year": "2025", "purpose": "Сравнить LEV с фенитоином/фосфенитоином/вальпроатом при педиатрическом судорожном эпилептическом статусе.", "design": "Систематический обзор и мета-анализ (14 исследований, поиск до 11.2024).", "population": "2 473 пациента.", "results": "LEV быстрее купирует приступы (MD -3.97 мин), короче пребывание в ОРИТ (MD 0.77), ниже риск НЯ vs фосфенитоин (RR 0.62). Смертность без различий.", "conclusion": "LEV имеет преимущества по скорости действия и безопасности."}, {"num": "29", "name": "Мета-анализ LEV при миоклонических приступах", "year": "2025", "purpose": "Оценить эффективность и безопасность LEV при миоклонических приступах при идиопатической генерализованной эпилепсии.", "design": "Систематический обзор и мета-анализ (18 исследований).", "population": "2 189 пациентов с ИГЭ и миоклонусом/ЮМЭ.", "results": "LEV = VPA по частоте прекращения приступов (OR 0.77); LEV > ламотриджина (OR 2.22), топирамата (OR 1.93) и плацебо (OR 4.88).", "conclusion": "LEV может рассматриваться для миоклонических приступов, особенно у женщин детородного возраста."}, {"num": "30", "name": "Однократный ночной приём LEV при SeLECTS", "year": "2025", "purpose": "Сравнить эффективность и приверженность разных режимов приёма LEV при самоограничивающейся эпилепсии с центро-височными пиками (SeLECTS).", "design": "Проспективное, открытое, исследование не-меньшей эффективности.", "population": "Пациенты с SeLECTS (n н/д).", "results": "Ночной однократный приём обеспечивает эффективность и улучшает приверженность.", "conclusion": "Ночной режим может быть предпочтительным для SeLECTS."}, {"num": "31", "name": "Систематический обзор мониторинга LEV при беременности", "year": "2025", "purpose": "Оценить существующие стратегии терапевтического лекарственного мониторинга (ТЛМ) LEV во время беременности.", "design": "Систематический обзор (10 исследований).", "population": "10 исследований.", "results": "Клиренс LEV значительно увеличивается во время беременности, особенно в I триместре; не выявлено повышенного риска неблагоприятных исходов при увеличении дозы.", "conclusion": "ТЛМ и коррекция дозы критически важны для поддержания эффективности на протяжении всей беременности."}, {"num": "32", "name": "Систематический обзор (Clinical Pharmacokinetics)", "year": "2025", "purpose": "Оценить эффективность и мониторинг монотерапии LEV при беременности.", "design": "Систематический обзор (7 статей с оценкой эффективности).", "population": "7 статей.", "results": "У 46.7–53.3% женщин отмечалось увеличение частоты приступов во время беременности.", "conclusion": "Необходим регулярный клинический контроль и мониторинг концентрации LEV в плазме."}, {"num": "33", "name": "Australian Pregnancy Register", "year": "2025", "purpose": "Оценить исходы беременности при приёме различных противоэпилептических препаратов.", "design": "Анализ данных регистра беременности.", "population": "Данные Австралийского регистра (n н/д).", "results": "LEV показал наименьший риск пороков развития плода среди всех препаратов.", "conclusion": "LEV имеет наибольшее преимущество с точки зрения низкого риска пороков развития."}, {"num": "34", "name": "Систематический обзор LEV vs CBZ при фокальной эпилепсии у детей", "year": "~2025", "purpose": "Сравнить монотерапию LEV и карбамазепином (CBZ) при педиатрической фокальной эпилепсии.", "design": "Систематический обзор и мета-анализ РКИ (в процессе).", "population": "Дети с фокальной эпилепсией (n н/д).", "results": "Данные в процессе анализа.", "conclusion": "Исследование продолжается."}, {"num": "35", "name": "NCT06866691 (SEIZE-TBI – профилактика приступов при ЧМТ)", "year": "~2025", "purpose": "Оценить профилактику приступов при ЧМТ с помощью LEV и лакосамида.", "design": "Фаза 4, рандомизированное.", "population": "Пациенты с ЧМТ (n н/д).", "results": "Идёт набор (Recruiting).", "conclusion": "Результаты ожидаются."}, {"num": "36", "name": "NCT07234695 (LEV для профилактики приступов при болезни Альцгеймера у взрослых с синдромом Дауна)", "year": "~2025", "purpose": "Оценить LEV для предотвращения приступов при болезни Альцгеймера у взрослых с синдромом Дауна.", "design": "Фаза 3.", "population": "Взрослые с синдромом Дауна и болезнью Альцгеймера (n н/д).", "results": "Идёт набор (Recruiting).", "conclusion": "Результаты ожидаются."}, {"num": "37", "name": "Мета-анализ VPA vs LEV при юношеской миоклонической эпилепсии (ЮМЭ)", "year": "2026", "purpose": "Сравнить эффективность и переносимость VPA и LEV при ЮМЭ.", "design": "Систематический обзор и мета-анализ (7 исследований).", "population": "1 009 пациентов.", "results": "VPA: выше частота ремиссии (RR 1.44) и ниже отмена терапии (RR 0.68), но выше риск нарушений памяти (RR 5.37) и веса (RR 6.40).", "conclusion": "VPA эффективнее LEV по контролю приступов, но имеет больше побочных эффектов."}, {"num": "38", "name": "Систематический обзор и мета-анализ (25 РКИ) – педиатрическая эпилепсия", "year": "2026", "purpose": "Сравнить эффективность LEV с плацебо/отсутствием терапии и с активными препаратами при эпилепсии у детей.", "design": "Систематический обзор и мета-анализ 25 РКИ.", "population": "4 070 пациентов (педиатрическая популяция).", "results": "vs плацебо/отсутствие терапии: RD для свободы от приступов 11.0%; для респондеров 24.3%. vs активные компараторы: RD для свободы от приступов –2.4%; для респондеров –7.4% (LEV не превосходит и может уступать).", "conclusion": "LEV эффективен как дополнительная терапия, но не превосходит другие препараты в качестве монотерапии и может быть менее эффективен в некоторых подгруппах."}]}, {"key": "bikarbonorm", "name": "БИКАРБОНОРМ", "catRu": "Урология · Ощелачивание мочи", "catUz": "Урология · Сийдикни ишқорлаш", "trials": [{"num": "1", "name": "Efficacy of urine alkalinization by oral administration of sodium bicarbonate (prospective open‑label trial)", "year": "2013", "purpose": "Оценить эффективность перорального приёма таблеток натрия бикарбоната для ощелачивания мочи.", "design": "Проспективное открытое исследование.", "population": "Участники (точное число не указано).", "results": "Целевой уровень pH мочи ≥7,0 был достигнут у всех участников через 10 часов.", "conclusion": "Пероральный приём стандартной дозы таблеток натрия бикарбоната эффективно ощелачивает мочу."}, {"num": "2", "name": "Hilton et al. (delayed‑release sodium bicarbonate in trained males)", "year": "2019", "purpose": "Изучить фармакокинетику и влияние на кислотно‑основное состояние, а также переносимость натрия бикарбоната в форме с отсроченным высвобождением.", "design": "Рандомизированное перекрёстное исследование.", "population": "12 здоровых тренированных мужчин.", "results": "Отсроченное высвобождение может облегчить желудочно‑кишечные симптомы и улучшить биодоступность бикарбоната.", "conclusion": "Требуется дальнейшее изучение, но эта форма может быть перспективной для снижения побочных эффектов."}, {"num": "3", "name": "Mahajan et al. (Daily oral sodium bicarbonate preserves GFR in early hypertensive nephropathy)", "year": "2010", "purpose": "Оценить, может ли ежедневный приём перорального бикарбоната натрия замедлить снижение СКФ у пациентов с гипертензивной нефропатией.", "design": "Рандомизированное контролируемое исследование (РКИ).", "population": "120 пациентов.", "results": "В группе бикарбоната снижение СКФ составило 1.47 мл/мин/1.73 м² в год против 2.05 в группе без лечения.", "conclusion": "Пероральный бикарбонат натрия замедляет прогрессирование снижения СКФ у пациентов с ранней гипертензивной нефропатией."}, {"num": "4", "name": "Dizen Kazan et al. (capsules vs. gastro‑resistant tablets in CKD stage 4)", "year": "2022", "purpose": "Сравнить эффективность и переносимость лечения натрия бикарбонатом в форме капсул по 500 мг и гастрорезистентных таблеток по 1000 мг у пациентов с ХБП 4 стадии.", "design": "Сравнительное исследование.", "population": "Пациенты с ХБП 4 стадии (точное число не указано).", "results": "Гастрорезистентный натрия бикарбонат, по‑видимому, быстрее нормализует уровень бикарбоната в сыворотке, чем капсулы.", "conclusion": "Гастрорезистентная форма может иметь преимущество в скорости коррекции ацидоза у пациентов с ХБП."}, {"num": "5", "name": "Jiang et al. (enteric‑coated formulation effects on absorption and GI discomfort)", "year": "2024", "purpose": "Оценить влияние кишечной доставки бикарбоната натрия (в энтеросолюбильной оболочке) на его всасывание и желудочно‑кишечные побочные эффекты.", "design": "Экспериментальное исследование на людях с фармакокинетическим анализом.", "population": "Здоровые добровольцы (точное число не указано).", "results": "Для повышения концентрации бикарбоната в крови >5 ммоль/л доза энтеросолюбильных таблеток на 25% ниже (225 мг/кг), чем обычных (300 мг/кг). Желудочно‑кишечный дискомфорт был значительно меньше в группе, принимавшей энтеросолюбильные таблетки.", "conclusion": "Кишечнорастворимая форма снижает необходимую дозу на 25% и уменьшает побочные эффекты со стороны ЖКТ."}, {"num": "6", "name": "BiCARB RCT (Witham MD et al.)", "year": "2020", "purpose": "Оценить клиническую и экономическую эффективность пероральной терапии бикарбонатом натрия у пожилых пациентов с ХБП и низкой степенью ацидоза.", "design": "Прагматичное, рандомизированное, двойное слепое, плацебо‑контролируемое исследование.", "population": "300 пациентов старше 60 лет с ХБП.", "results": "Пероральный бикарбонат натрия не улучшил физические функции, функцию почек и ряд других показателей здоровья. Терапия увеличила количество нежелательных явлений и вряд ли является экономически эффективной.", "conclusion": "Применение бикарбоната натрия у пожилых пациентов с ХБП и низкой степенью ацидоза не даёт клинических преимуществ и не является экономически эффективным в условиях британского NHS."}, {"num": "7", "name": "BICARICU‑2 (Jaber S et al.)", "year": "2025", "purpose": "Оценить, снижает ли внутривенная инфузия бикарбоната натрия 90‑дневную смертность от всех причин у пациентов с тяжёлым метаболическим ацидозом и острой почечной недостаточностью средней или тяжёлой степени.", "design": "Рандомизированное клиническое исследование.", "population": "Пациенты в критическом состоянии (точное число не указано).", "results": "Внутривенное введение бикарбоната натрия не повлияло на смертность.", "conclusion": "Для пациентов с тяжёлым метаболическим ацидозом и острой почечной недостаточностью внутривенный бикарбонат натрия не оказывает влияния на выживаемость."}, {"num": "8", "name": "BICARb Pilot Trial (NCT05918029)", "year": "(планируемое)", "purpose": "Оценить влияние перорального бикарбоната на костную ткань у пациентов с ХБП.", "design": "Пилотное РКИ.", "population": "Пациенты с ХБП (n неизвестно).", "results": "Результатов пока нет.", "conclusion": "Исследование начато, результаты ожидаются."}, {"num": "9", "name": "Dial‑Bicarb Trial (NCT06270134)", "year": "(планируемое)", "purpose": "Изучить влияние концентрации бикарбоната в диализате на исходы у пациентов на гемодиализе.", "design": "РКИ.", "population": "Пациенты на гемодиализе (n неизвестно).", "results": "Результатов пока нет.", "conclusion": "Исследование в стадии набора."}, {"num": "10", "name": "JASN – Bicarbonate Supplementation Slows Progression of CKD and Improves Nutritional Status", "year": "2009", "purpose": "Рандомизированное контролируемое исследование", "design": "Пациенты с ХБП и быстрым прогрессированием", "population": "", "results": "Быстрое прогрессирование отмечено у 9% пациентов на бикарбонате против 45% в контроле", "conclusion": "Бикарбонат натрия замедляет снижение функции почек и улучшает нутритивный статус"}, {"num": "11", "name": "KDIGO 2012 – Рекомендация 3.4.1", "year": "2012", "purpose": "Клиническое руководство (уровень рекомендации 2B)", "design": "Пациенты с ХБП и уровнем бикарбоната сыворотки <22 ммоль/л", "population": "", "results": "Рекомендована пероральная бикарбонатная терапия для поддержания нормального уровня бикарбоната", "conclusion": "Слабая рекомендация, основанная на данных обсервационных исследований и одном РКИ"}, {"num": "12", "name": "JASN – Takahashi Rina et al. (ASN Kidney Week 2025)", "year": "2025", "purpose": "Ретроспективное когортное исследование (TRI-CKD)", "design": "50 577 ветеранов США с впервые выявленной ХБП (97% мужчины, средний возраст 65 лет)", "population": "", "results": "Назначение бикарбоната ассоциировано с повышением смертности: скорректированный HR 1.16 (95% CI 1.11–1.22)", "conclusion": "Результаты противоречат предыдущим данным о пользе; необходим тщательный отбор пациентов"}, {"num": "13", "name": "KDIGO 2024 – Clinical Practice Guideline for CKD", "year": "2024", "purpose": "Клиническое руководство (практический пункт, не градированная рекомендация)", "design": "Пациенты с ХБП и уровнем бикарбоната <18 ммоль/л", "population": "", "results": "Нет градированной рекомендации из-за отсутствия крупных РКИ. Предложен порог <18 ммоль/л для начала терапии", "conclusion": "Рекомендация понижена с 2B до практического пункта на основе новых данных РКИ (включая BiCARB)"}, {"num": "14", "name": "KDIGO 2024 – Мета-анализ (цитируется в руководстве)", "year": "2024", "purpose": "Мета-анализ 15 РКИ (2445 участников)", "design": "Плацебо-контролируемые РКИ по бикарбонату натрия vs плацебо", "population": "", "results": "Риск почечной недостаточности: HR 0.81 (95% CI 0.54–1.22)", "conclusion": "Эффект на риск почечной недостаточности статистически не подтверждён"}, {"num": "15", "name": "JASN – SA-PO496 (Singh et al.)", "year": "2024", "purpose": "Пост-анализ исследования VALOR-CKD", "design": "Пациенты с ХБП (eGFR 20–40) и бикарбонатом <18 ммоль/л", "population": "", "results": "Достижение уровня бикарбоната ≥22 ммоль/л ассоциировано со снижением риска прогрессирования ХБП: HR 0.52 (p<0.0005)", "conclusion": "Поддерживает целевой уровень ≥22 ммоль/л у пациентов с исходным <18 ммоль/л"}, {"num": "16", "name": "KDIGO 2024 – BiCARB trial", "year": "2024", "purpose": "Крупнейшее плацебо-контролируемое РКИ (цитируется в руководстве)", "design": "Пожилые пациенты (≥60 лет) с ХБП G3–G4 и бикарбонатом <22 ммоль/л", "population": "", "results": "Нет улучшения физических функций, качества жизни, функции почек. Более высокие затраты и более низкое качество жизни", "conclusion": "Подтверждает отсутствие пользы у пожилых пациентов с лёгким ацидозом"}]}];
+</script>
+<script>
+/* ===================== ASFARMA Evidence Database ===================== */
+/* ================= GitHub Pages deployment build ===================== */
+
+/* ---- CONFIG: fill these in with your repo details before pushing ---- */
+const GITHUB_OWNER  = 'YOUR-GITHUB-USERNAME';   // <-- TODO: your GitHub username or org
+const GITHUB_REPO   = 'asfarma-evidence-db';    // <-- TODO: your repository name
+const GITHUB_BRANCH = 'main';                   // <-- TODO: branch used by GitHub Pages
+const CONFIG_PATH   = 'data/site-config.json';
+/* ---------------------------------------------------------------------- */
+
+const T = {
+  ru: {
+    brandSmall: 'ASFARMA · КЛИНИЧЕСКИЕ ДАННЫЕ',
+    heroEyebrow: 'Медицинский отдел ASFARMA',
+    heroTitle: 'БАЗА ДОКАЗАТЕЛЬНОЙ МЕДИЦИНЫ ДЛЯ ПРЕПАРАТОВ ASFARMA',
+    heroText: 'Ключевые клинические исследования по каждому препарату компании — в одном месте, для быстрой сверки перед визитом.',
+    shelfLabel: 'Выберите препарат',
+    trialsWord: (n)=> n + ' ' + pluralRu(n, 'исследование','исследования','исследований'),
+    close: 'Закрыть',
+    noPkg: 'Фото упаковки не загружено',
+    legendNum: '№',
+    legendName: 'Исследование',
+    legendYear: 'Год · n',
+    shareTitle: 'Скопировать ссылку на исследование',
+    linkCopied: 'Ссылка скопирована',
+    linkCopyFailed: 'Не удалось скопировать ссылку',
+    fieldPurpose: 'Цель',
+    fieldDesign: 'Дизайн',
+    fieldPop: 'Популяция (n)',
+    fieldResults: 'Результаты',
+    fieldConclusion: 'Заключение',
+    footerRights: '© ASFARMA. Внутренняя база клинических данных.',
+    adminLink: 'Панель администратора',
+    backToSite: '← Вернуться на сайт',
+    adminTitle: 'Панель администратора',
+    adminLead: 'Загрузка логотипа, favicon и фото упаковок препаратов. Изменения видят все посетители сайта после публикации на GitHub Pages.',
+    pwLabel: 'Пароль',
+    pwPlaceholder: 'Введите пароль',
+    loginBtn: 'Войти',
+    wrongPw: 'Неверный пароль',
+    logoutBtn: 'Выйти',
+    logoSection: 'Логотип (верхний левый угол)',
+    logoHint: 'Рекомендуется PNG/SVG с прозрачным фоном, квадратный.',
+    faviconSection: 'Favicon',
+    faviconHint: 'Иконка вкладки браузера. Рекомендуется квадратное изображение.',
+    pkgSection: 'Фото упаковок препаратов',
+    pkgHint: 'Отображается в окне препарата рядом с названием.',
+    uploadBtn: 'Загрузить файл',
+    removeBtn: 'Удалить',
+    savedToast: 'Сохранено',
+    changePw: 'Сменить пароль',
+    newPwPlaceholder: 'Новый пароль (мин. 4 симв.)',
+    setPwBtn: 'Сохранить пароль',
+    pwTooShort: 'Пароль слишком короткий',
+    pwChanged: 'Пароль изменён и опубликован',
+    ghSectionTitle: 'Подключение к GitHub',
+    ghSectionHint: 'Токен нужен только для сохранения изменений и хранится ТОЛЬКО в этом браузере — он никогда не попадает в код сайта.',
+    ghTokenLabel: 'GitHub Personal Access Token',
+    ghTokenPlaceholder: 'ghp_xxxxxxxxxxxxxxxxxxxx',
+    ghTokenSave: 'Сохранить токен',
+    ghTokenSaved: 'Токен сохранён в этом браузере',
+    ghTokenMissing: 'Сначала укажите GitHub-токен вверху страницы',
+    ghNoTokenBadge: 'Токен не задан — сохранение недоступно',
+    ghTokenBadge: 'Токен задан в этом браузере',
+    ghCommitting: 'Публикация на GitHub…',
+    ghCommitOk: 'Опубликовано. Изменения появятся на сайте примерно через 30–60 секунд.',
+    ghCommitFail: 'Ошибка публикации: ',
+    ghRemoveTokenBtn: 'Забыть токен',
+  },
+  uz: {
+    brandSmall: 'ASFARMA · КЛИНИК МАЪЛУМОТЛАР',
+    heroEyebrow: 'ASFARMA тиббиёт бўлими',
+    heroTitle: 'АСФАРМА ПРЕПАРАТЛАРИ УЧУН ДАЛИЛЛАР БАЗАСИ',
+    heroText: 'Ҳар бир препарат бўйича асосий клиник тадқиқотлар — визитдан олдин тезда кўриб чиқиш учун бир жойда.',
+    shelfLabel: 'Препаратни танланг',
+    trialsWord: (n)=> n + ' та тадқиқот',
+    close: 'Ёпиш',
+    noPkg: 'Қадоқ расми юкланмаган',
+    legendNum: '№',
+    legendName: 'Тадқиқот номи',
+    legendYear: 'Йил · n',
+    shareTitle: 'Тадқиқот ҳаволасини нусхалаш',
+    linkCopied: 'Ҳавола нусхаланди',
+    linkCopyFailed: 'Ҳавола нусхаланмади',
+    fieldPurpose: 'Мақсад',
+    fieldDesign: 'Дизайн',
+    fieldPop: 'Популяция (n)',
+    fieldResults: 'Натижалар',
+    fieldConclusion: 'Хулоса',
+    footerRights: '© ASFARMA. Ички клиник маълумотлар базаси.',
+    adminLink: 'Админ панель',
+    backToSite: '← Сайтга қайтиш',
+    adminTitle: 'Админ панель',
+    adminLead: 'Логотип, favicon ва препарат қадоқлари расмларини юклаш. GitHub Pages'+"'"+'да нашр этилгач, ўзгаришларни барча сайт мехмонлари кўради.',
+    pwLabel: 'Парол',
+    pwPlaceholder: 'Паролни киритинг',
+    loginBtn: 'Кириш',
+    wrongPw: 'Парол нотўғри',
+    logoutBtn: 'Чиқиш',
+    logoSection: 'Логотип (юқори чап бурчак)',
+    logoHint: 'Шаффоф фонли, квадрат PNG/SVG тавсия этилади.',
+    faviconSection: 'Favicon',
+    faviconHint: 'Браузер вкладкаси учун белги. Квадрат расм тавсия этилади.',
+    pkgSection: 'Препарат қадоқлари расмлари',
+    pkgHint: 'Препарат ойнасида номи ёнида кўринади.',
+    uploadBtn: 'Файл юклаш',
+    removeBtn: 'Ўчириш',
+    savedToast: 'Сақланди',
+    changePw: 'Паролни ўзгартириш',
+    newPwPlaceholder: 'Янги парол (кам. 4 та белги)',
+    setPwBtn: 'Паролни сақлаш',
+    pwTooShort: 'Парол жуда қисқа',
+    pwChanged: 'Парол ўзгартирилди ва нашр этилди',
+    ghSectionTitle: 'GitHub билан уланиш',
+    ghSectionHint: 'Токен фақат ўзгаришларни сақлаш учун керак ва ФАҚАТ шу браузерда сақланади — у сайт кодига ҳеч қачон тушмайди.',
+    ghTokenLabel: 'GitHub Personal Access Token',
+    ghTokenPlaceholder: 'ghp_xxxxxxxxxxxxxxxxxxxx',
+    ghTokenSave: 'Токенни сақлаш',
+    ghTokenSaved: 'Токен ушбу браузерда сақланди',
+    ghTokenMissing: 'Аввал юқорида GitHub токенини киритинг',
+    ghNoTokenBadge: 'Токен киритилмаган — сақлаш имконсиз',
+    ghTokenBadge: 'Токен ушбу браузерда мавжуд',
+    ghCommitting: 'GitHub'+"'"+'га юкланмоқда…',
+    ghCommitOk: 'Нашр этилди. Ўзгаришлар сайтда тахминан 30–60 сония ичида кўринади.',
+    ghCommitFail: 'Нашр этишда хатолик: ',
+    ghRemoveTokenBtn: 'Токенни унутиш',
+  }
+};
+
+function pluralRu(n, one, few, many){
+  n = Math.abs(n) % 100;
+  const n1 = n % 10;
+  if (n > 10 && n < 20) return many;
+  if (n1 > 1 && n1 < 5) return few;
+  if (n1 === 1) return one;
+  return many;
+}
+
+/* ---------------- state ---------------- */
+let LANG = 'ru';
+let VIEW = 'site'; // 'site' | 'admin'
+let ACTIVE_DRUG = null; // key of drug shown in modal
+let ADMIN_LOGGED_IN = false;
+
+let SITE_CONFIG = null;   // parsed data/site-config.json
+let CONFIG_SHA = null;    // sha of the config file, needed to commit updates
+let ASSETS = { logo:null, favicon:null, pkg:{} }; // resolved display URLs/dataURLs
+
+const DEFAULT_ADMIN_PW_HASH = 'bcb158d15c0395426ca7522e8a5f924ff3a178fae44a0031635a70a5eee638a5'; // sha256("Asfarma2026!")
+
+async function sha256Hex(str){
+  const enc = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ---------------- GitHub token (kept only in this browser) ---------------- */
+function getGhToken(){
+  return localStorage.getItem('asfarma_gh_token') || '';
+}
+function setGhToken(token){
+  if (token) localStorage.setItem('asfarma_gh_token', token);
+  else localStorage.removeItem('asfarma_gh_token');
+}
+
+function ghHeaders(){
+  const token = getGhToken();
+  const headers = { 'Accept':'application/vnd.github+json' };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  return headers;
+}
+function ghApiUrl(path){
+  return `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
+}
+
+/* Base64 helpers that are safe for UTF-8 text (config.json has Cyrillic) */
+function utf8ToBase64(str){
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function base64ToUtf8(b64){
+  return decodeURIComponent(escape(atob(b64)));
+}
+
+async function ghGetFile(path){
+  const url = ghApiUrl(path) + '?ref=' + encodeURIComponent(GITHUB_BRANCH) + '&t=' + Date.now();
+  const res = await fetch(url, { headers: ghHeaders(), cache:'no-store' });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error('GitHub read error (' + res.status + ')');
+  return res.json();
+}
+
+async function ghPutFile(path, base64Content, message){
+  const existing = await ghGetFile(path);
+  const body = {
+    message: message || ('Update ' + path),
+    content: base64Content,
+    branch: GITHUB_BRANCH,
+  };
+  if (existing && existing.sha) body.sha = existing.sha;
+  const res = await fetch(ghApiUrl(path), {
+    method: 'PUT',
+    headers: Object.assign({ 'Content-Type':'application/json' }, ghHeaders()),
+    body: JSON.stringify(body)
+  });
+  if (!res.ok){
+    let detail = '';
+    try{ const j = await res.json(); detail = j.message || ''; }catch(e){}
+    throw new Error((res.status) + (detail ? ' — ' + detail : ''));
+  }
+  return res.json();
+}
+
+async function ghDeleteFile(path, message){
+  const existing = await ghGetFile(path);
+  if (!existing) return;
+  const res = await fetch(ghApiUrl(path), {
+    method:'DELETE',
+    headers: Object.assign({ 'Content-Type':'application/json' }, ghHeaders()),
+    body: JSON.stringify({ message: message || ('Delete ' + path), sha: existing.sha, branch: GITHUB_BRANCH })
+  });
+  if (!res.ok){
+    let detail = '';
+    try{ const j = await res.json(); detail = j.message || ''; }catch(e){}
+    throw new Error((res.status) + (detail ? ' — ' + detail : ''));
+  }
+}
+
+/* ---------------- site-config.json (public read, no auth needed) ---------------- */
+function defaultConfig(){
+  return {
+    adminPasswordHash: DEFAULT_ADMIN_PW_HASH,
+    logo: null, logoVersion: 0,
+    favicon: null, faviconVersion: 0,
+    pkg: {}, pkgVersion: {}
+  };
+}
+
+async function loadSiteConfig(){
+  try{
+    const res = await fetch('./' + CONFIG_PATH + '?t=' + Date.now(), { cache:'no-store' });
+    if (!res.ok) throw new Error('not found');
+    SITE_CONFIG = await res.json();
+  }catch(e){
+    SITE_CONFIG = defaultConfig();
+  }
+  ASSETS.logo = SITE_CONFIG.logo ? ('./' + SITE_CONFIG.logo + '?v=' + (SITE_CONFIG.logoVersion||0)) : null;
+  ASSETS.favicon = SITE_CONFIG.favicon ? ('./' + SITE_CONFIG.favicon + '?v=' + (SITE_CONFIG.faviconVersion||0)) : null;
+  ASSETS.pkg = {};
+  DRUGS.forEach(d=>{
+    const p = SITE_CONFIG.pkg && SITE_CONFIG.pkg[d.key];
+    const v = (SITE_CONFIG.pkgVersion && SITE_CONFIG.pkgVersion[d.key]) || 0;
+    ASSETS.pkg[d.key] = p ? ('./' + p + '?v=' + v) : null;
+  });
+  applyFavicon();
+}
+
+/* Fetch the config file together with its sha (needed before committing changes) */
+async function fetchConfigForEdit(){
+  const file = await ghGetFile(CONFIG_PATH);
+  if (!file){
+    CONFIG_SHA = null;
+    return defaultConfig();
+  }
+  CONFIG_SHA = file.sha;
+  try{
+    return JSON.parse(base64ToUtf8(file.content.replace(/\n/g,'')));
+  }catch(e){
+    return defaultConfig();
+  }
+}
+
+async function commitConfig(updatedConfig, message){
+  const base64 = utf8ToBase64(JSON.stringify(updatedConfig, null, 2));
+  await ghPutFile(CONFIG_PATH, base64, message || 'Update site-config.json');
+  SITE_CONFIG = updatedConfig;
+}
+
+function applyFavicon(){
+  const link = document.getElementById('dynamic-favicon');
+  if (ASSETS.favicon){
+    link.setAttribute('href', ASSETS.favicon);
+  }
+}
+
+/* ---------------- helpers ---------------- */
+function esc(str){
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+function isNumeric(v){
+  return /^\d+$/.test(String(v).trim());
+}
+
+/* ---------------- routing ---------------- */
+function goto(view){
+  VIEW = view;
+  ACTIVE_DRUG = null;
+  render();
+}
+
+let PENDING_SCROLL_TRIAL = null; // {drugKey, idx} to scroll+highlight after render
+
+function parseHash(){
+  const h = (location.hash || '').replace(/^#/, '');
+  if (!h) return null;
+  const parts = h.split('/');
+  const drugKey = parts[0];
+  const idx = parts.length > 1 ? parseInt(parts[1], 10) : null;
+  if (!DRUGS.some(d => d.key === drugKey)) return null;
+  return { drugKey, idx: Number.isInteger(idx) ? idx : null };
+}
+
+function applyHashRoute(){
+  const parsed = parseHash();
+  if (!parsed) return;
+  VIEW = 'site';
+  ACTIVE_DRUG = parsed.drugKey;
+  if (parsed.idx != null) PENDING_SCROLL_TRIAL = { drugKey: parsed.drugKey, idx: parsed.idx };
+}
+
+function openDrug(drugKey){
+  ACTIVE_DRUG = drugKey;
+  history.replaceState(null, '', '#' + drugKey);
+  render();
+}
+
+function closeDrug(){
+  ACTIVE_DRUG = null;
+  history.replaceState(null, '', location.pathname + location.search);
+  render();
+}
+
+function showToast(message){
+  const existing = document.querySelector('.save-toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'save-toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(()=>{ toast.remove(); }, 3200);
+}
+
+async function copyShareLink(drugKey, idx){
+  const t = T[LANG];
+  const url = location.origin + location.pathname + location.search + '#' + drugKey + '/' + idx;
+  try{
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(url);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    showToast(t.linkCopied);
+  }catch(e){
+    showToast(t.linkCopyFailed);
+  }
+}
+
+/* ---------------- render root ---------------- */
+function render(){
+  const app = document.getElementById('app');
+  document.documentElement.lang = LANG === 'uz' ? 'uz' : 'ru';
+  if (VIEW === 'admin'){
+    app.innerHTML = renderAdmin();
+    wireAdmin();
+  } else {
+    app.innerHTML = renderSite();
+    wireSite();
+  }
+}
+
+/* ================= SITE VIEW ================= */
+function renderSite(){
+  const t = T[LANG];
+  return `
+    ${renderHeader()}
+    <section class="hero">
+      <div class="hero-eyebrow">${esc(t.heroEyebrow)}</div>
+      <h1>${esc(t.heroTitle)}</h1>
+      <p>${esc(t.heroText)}</p>
+      <div class="hero-rule"></div>
+    </section>
+    <div class="shelf-wrap">
+      <div class="shelf-label">${esc(t.shelfLabel)}</div>
+      <div class="shelf">
+        ${DRUGS.map((d,i)=>renderPill(d,i)).join('')}
+      </div>
+    </div>
+    ${renderFooter()}
+    ${ACTIVE_DRUG ? renderModal(DRUGS.find(d=>d.key===ACTIVE_DRUG)) : ''}
+  `;
+}
+
+function renderHeader(){
+  const t = T[LANG];
+  return `
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-logo-slot">
+        ${ASSETS.logo ? `<img src="${ASSETS.logo}" alt="logo">` : `<span class="logo-fallback">AF</span>`}
+      </div>
+      <div class="brand-name">ASFARMA<small>${esc(t.brandSmall)}</small></div>
+    </div>
+    <div class="lang-switch" role="group" aria-label="language">
+      <button data-lang="ru" class="${LANG==='ru'?'active':''}">РУС</button>
+      <button data-lang="uz" class="${LANG==='uz'?'active':''}">ЎЗБ</button>
+    </div>
+  </header>`;
+}
+
+function renderFooter(){
+  const t = T[LANG];
+  return `
+  <footer class="site-footer">
+    <span>${esc(t.footerRights)}</span>
+    <a href="#" id="go-admin">${esc(t.adminLink)}</a>
+  </footer>`;
+}
+
+function renderPill(d, i){
+  const t = T[LANG];
+  const cat = LANG === 'uz' ? d.catUz : d.catRu;
+  return `
+  <button class="pill" data-drug="${d.key}">
+    <span class="pill-index">${String(i+1).padStart(2,'0')}</span>
+    <span class="pill-name">${esc(d.name)}</span>
+    <span class="pill-cat">${esc(cat)}</span>
+    <span class="pill-count">${esc(t.trialsWord(d.trials.length))}</span>
+  </button>`;
+}
+
+function renderModal(drug){
+  const t = T[LANG];
+  const pkg = ASSETS.pkg[drug.key];
+  const cat = LANG === 'uz' ? drug.catUz : drug.catRu;
+
+  let rowsHtml = '';
+  let prevCategory = null;
+  drug.trials.forEach((trial, idx)=>{
+    const numeric = isNumeric(trial.num);
+    if (!numeric && trial.num){
+      if (trial.num !== prevCategory){
+        rowsHtml += `<div class="category-divider">${esc(trial.num)}</div>`;
+        prevCategory = trial.num;
+      }
+    } else {
+      prevCategory = null;
+    }
+    rowsHtml += `
+    <div class="trial-row" id="trial-${drug.key}-${idx}" data-drug="${drug.key}" data-idx="${idx}">
+      <div class="trial-summary">
+        <div class="trial-num">${esc(numeric ? trial.num : String(idx+1))}</div>
+        <div class="trial-name">${esc(trial.name || '—')}</div>
+        <div class="trial-meta">
+          <span class="trial-year">${esc(trial.year || '—')}</span>
+          <span class="trial-pop">n=${esc(trial.population || '—')}</span>
+        </div>
+        <button class="trial-share" data-share-drug="${drug.key}" data-share-idx="${idx}" title="${esc(t.shareTitle)}" aria-label="${esc(t.shareTitle)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+        </button>
+      </div>
+      <div class="trial-detail">
+        <div class="trial-detail-grid">
+          <div class="detail-field">
+            <dt>${esc(t.fieldPurpose)}</dt>
+            <dd>${esc(trial.purpose || '—')}</dd>
+          </div>
+          <div class="detail-field">
+            <dt>${esc(t.fieldDesign)}</dt>
+            <dd>${esc(trial.design || '—')}</dd>
+          </div>
+          <div class="detail-field wide">
+            <dt>${esc(t.fieldResults)}</dt>
+            <dd>${esc(trial.results || '—')}</dd>
+          </div>
+          <div class="detail-field wide">
+            <dt>${esc(t.fieldConclusion)}</dt>
+            <dd>${esc(trial.conclusion || '—')}</dd>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  return `
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-head">
+        <div class="pkg-photo">
+          ${pkg ? `<img src="${pkg}" alt="${esc(drug.name)}">` : `<span class="pkg-empty">${esc(t.noPkg)}</span>`}
+        </div>
+        <div class="modal-title-block">
+          <div class="modal-cat">${esc(cat)}</div>
+          <h2>${esc(drug.name)}</h2>
+          <div class="modal-sub">${esc(t.trialsWord(drug.trials.length))}</div>
+        </div>
+        <button class="modal-close" id="modal-close" aria-label="${esc(t.close)}">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="legend-row">
+          <span class="lg-num">${esc(t.legendNum)}</span>
+          <span class="lg-name">${esc(t.legendName)}</span>
+          <span class="lg-meta">${esc(t.legendYear)}</span>
+        </div>
+        <div class="trial-list">
+          ${rowsHtml}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function wireSite(){
+  document.querySelectorAll('.lang-switch button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      LANG = btn.getAttribute('data-lang');
+      render();
+    });
+  });
+  const adminLink = document.getElementById('go-admin');
+  if (adminLink) adminLink.addEventListener('click', (e)=>{ e.preventDefault(); goto('admin'); });
+
+  document.querySelectorAll('.pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      openDrug(btn.getAttribute('data-drug'));
+    });
+  });
+
+  const overlay = document.getElementById('modal-overlay');
+  if (overlay){
+    overlay.addEventListener('click', (e)=>{
+      if (e.target === overlay){ closeDrug(); }
+    });
+    document.getElementById('modal-close').addEventListener('click', ()=>{
+      closeDrug();
+    });
+    document.addEventListener('keydown', escHandler);
+
+    document.querySelectorAll('.trial-share').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const drugKey = btn.getAttribute('data-share-drug');
+        const idx = btn.getAttribute('data-share-idx');
+        copyShareLink(drugKey, idx);
+      });
+    });
+
+    if (PENDING_SCROLL_TRIAL && PENDING_SCROLL_TRIAL.drugKey === ACTIVE_DRUG){
+      const target = PENDING_SCROLL_TRIAL;
+      PENDING_SCROLL_TRIAL = null;
+      setTimeout(()=>{
+        const el = document.getElementById('trial-' + target.drugKey + '-' + target.idx);
+        if (el){
+          el.scrollIntoView({ behavior:'smooth', block:'center' });
+          el.classList.add('trial-highlight');
+          setTimeout(()=> el.classList.remove('trial-highlight'), 1900);
+        }
+      }, 80);
+    }
+  }
+}
+
+function escHandler(e){
+  if (e.key === 'Escape' && ACTIVE_DRUG){
+    document.removeEventListener('keydown', escHandler);
+    closeDrug();
+  }
+}
+
+/* ================= ADMIN VIEW ================= */
+function renderAdmin(){
+  const t = T[LANG];
+  const hasToken = !!getGhToken();
+
+  if (!ADMIN_LOGGED_IN){
+    return `
+    <div class="admin-shell">
+      <div class="admin-topbar">
+        <h1>${esc(t.adminTitle)}</h1>
+        <a href="#" id="back-site" class="btn-secondary" style="text-decoration:none;">${esc(t.backToSite)}</a>
+      </div>
+      <p class="admin-lead">${esc(t.adminLead)}</p>
+      <div class="login-card">
+        <label for="pw-input">${esc(t.pwLabel)}</label>
+        <input type="password" id="pw-input" placeholder="${esc(t.pwPlaceholder)}">
+        <div id="pw-error" class="error-msg" style="display:none;">${esc(t.wrongPw)}</div>
+        <button class="btn-primary" id="pw-submit">${esc(t.loginBtn)}</button>
+      </div>
+    </div>`;
+  }
+
+  return `
+  <div class="admin-shell">
+    <div class="admin-topbar">
+      <h1>${esc(t.adminTitle)}</h1>
+      <div style="display:flex;gap:10px;">
+        <a href="#" id="back-site" class="btn-secondary" style="text-decoration:none;">${esc(t.backToSite)}</a>
+        <button class="btn-secondary" id="admin-logout">${esc(t.logoutBtn)}</button>
+      </div>
+    </div>
+    <p class="admin-lead">${esc(t.adminLead)}</p>
+
+    <div class="admin-section">
+      <h3>${esc(t.ghSectionTitle)}</h3>
+      <div class="section-hint">${esc(t.ghSectionHint)}</div>
+      <div class="gh-badge ${hasToken ? 'gh-badge-ok' : 'gh-badge-warn'}">${esc(hasToken ? t.ghTokenBadge : t.ghNoTokenBadge)}</div>
+      <div class="pw-change-row" style="margin-top:12px;">
+        <input type="password" id="gh-token-input" placeholder="${esc(t.ghTokenPlaceholder)}">
+        <button class="btn-primary" id="gh-token-save">${esc(t.ghTokenSave)}</button>
+        ${hasToken ? `<button class="btn-secondary" id="gh-token-remove">${esc(t.ghRemoveTokenBtn)}</button>` : ''}
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>${esc(t.logoSection)}</h3>
+      <div class="section-hint">${esc(t.logoHint)}</div>
+      <div class="upload-row">
+        <div class="upload-preview" id="preview-logo">
+          ${ASSETS.logo ? `<img src="${ASSETS.logo}">` : ''}
+        </div>
+        <label class="file-input-label">${esc(t.uploadBtn)}<input type="file" accept="image/*" id="file-logo"></label>
+        ${ASSETS.logo ? `<button class="remove-link" data-remove="logo">${esc(t.removeBtn)}</button>` : ''}
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>${esc(t.faviconSection)}</h3>
+      <div class="section-hint">${esc(t.faviconHint)}</div>
+      <div class="upload-row">
+        <div class="upload-preview" id="preview-favicon">
+          ${ASSETS.favicon ? `<img src="${ASSETS.favicon}">` : ''}
+        </div>
+        <label class="file-input-label">${esc(t.uploadBtn)}<input type="file" accept="image/*" id="file-favicon"></label>
+        ${ASSETS.favicon ? `<button class="remove-link" data-remove="favicon">${esc(t.removeBtn)}</button>` : ''}
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>${esc(t.pkgSection)}</h3>
+      <div class="section-hint">${esc(t.pkgHint)}</div>
+      <div class="drug-upload-list">
+        ${DRUGS.map(d => `
+          <div class="drug-upload-row">
+            <div class="drug-upload-name">${esc(d.name)}</div>
+            <div class="upload-preview pkg-preview" id="preview-pkg-${d.key}">
+              ${ASSETS.pkg[d.key] ? `<img src="${ASSETS.pkg[d.key]}">` : ''}
+            </div>
+            <label class="file-input-label">${esc(t.uploadBtn)}<input type="file" accept="image/*" class="file-pkg" data-key="${d.key}"></label>
+            ${ASSETS.pkg[d.key] ? `<button class="remove-link" data-remove-pkg="${d.key}">${esc(t.removeBtn)}</button>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>${esc(t.changePw)}</h3>
+      <div class="pw-change-row">
+        <input type="password" id="new-pw" placeholder="${esc(t.newPwPlaceholder)}">
+        <button class="btn-primary" id="set-pw-btn">${esc(t.setPwBtn)}</button>
+      </div>
+      <div id="pw-change-msg" class="error-msg" style="display:none;"></div>
+    </div>
+  </div>`;
+}
+
+function wireAdmin(){
+  const t = T[LANG];
+  const backLink = document.getElementById('back-site');
+  if (backLink) backLink.addEventListener('click', (e)=>{ e.preventDefault(); goto('site'); });
+
+  if (!ADMIN_LOGGED_IN){
+    const submit = document.getElementById('pw-submit');
+    const input = document.getElementById('pw-input');
+    const doLogin = async ()=>{
+      const hash = await sha256Hex(input.value || '');
+      const expected = (SITE_CONFIG && SITE_CONFIG.adminPasswordHash) || DEFAULT_ADMIN_PW_HASH;
+      if (hash === expected){
+        ADMIN_LOGGED_IN = true;
+        render();
+      } else {
+        document.getElementById('pw-error').style.display = 'block';
+      }
+    };
+    submit.addEventListener('click', doLogin);
+    input.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') doLogin(); });
+    return;
+  }
+
+  document.getElementById('admin-logout').addEventListener('click', ()=>{
+    ADMIN_LOGGED_IN = false;
+    render();
+  });
+
+  document.getElementById('gh-token-save').addEventListener('click', ()=>{
+    const val = document.getElementById('gh-token-input').value.trim();
+    if (val){ setGhToken(val); showToast(t.ghTokenSaved); render(); }
+  });
+  const removeTokenBtn = document.getElementById('gh-token-remove');
+  if (removeTokenBtn){
+    removeTokenBtn.addEventListener('click', ()=>{ setGhToken(''); render(); });
+  }
+
+  document.getElementById('file-logo').addEventListener('change', (e)=>
+    handleUpload(e, {
+      assetPath: 'assets/logo.png', format:'image/png', maxDim:400,
+      onLocalPreview: (dataUrl)=>{ ASSETS.logo = dataUrl; render(); },
+      applyConfig: (cfg, path)=>{ cfg.logo = path; cfg.logoVersion = (cfg.logoVersion||0) + 1; }
+    })
+  );
+  document.getElementById('file-favicon').addEventListener('change', (e)=>
+    handleUpload(e, {
+      assetPath: 'assets/favicon.png', format:'image/png', maxDim:128,
+      onLocalPreview: (dataUrl)=>{ ASSETS.favicon = dataUrl; applyFavicon(); render(); },
+      applyConfig: (cfg, path)=>{ cfg.favicon = path; cfg.faviconVersion = (cfg.faviconVersion||0) + 1; }
+    })
+  );
+
+  document.querySelectorAll('.file-pkg').forEach(inp=>{
+    inp.addEventListener('change', (e)=>{
+      const key = inp.getAttribute('data-key');
+      handleUpload(e, {
+        assetPath: 'assets/pkg-' + key + '.jpg', format:'image/jpeg', maxDim:640,
+        onLocalPreview: (dataUrl)=>{ ASSETS.pkg[key] = dataUrl; render(); },
+        applyConfig: (cfg, path)=>{
+          cfg.pkg = cfg.pkg || {};
+          cfg.pkgVersion = cfg.pkgVersion || {};
+          cfg.pkg[key] = path;
+          cfg.pkgVersion[key] = (cfg.pkgVersion[key]||0) + 1;
+        }
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-remove]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const which = btn.getAttribute('data-remove');
+      if (!getGhToken()){ showToast(t.ghTokenMissing); return; }
+      const assetPath = which === 'logo' ? 'assets/logo.png' : 'assets/favicon.png';
+      showToast(t.ghCommitting);
+      try{
+        await ghDeleteFile(assetPath, 'Remove ' + assetPath);
+        const cfg = await fetchConfigForEdit();
+        if (which === 'logo'){ cfg.logo = null; } else { cfg.favicon = null; }
+        await commitConfig(cfg, 'Remove ' + which);
+        if (which === 'logo') ASSETS.logo = null; else { ASSETS.favicon = null; applyFavicon(); }
+        showToast(t.ghCommitOk);
+      }catch(err){
+        showToast(t.ghCommitFail + err.message);
+      }
+      render();
+    });
+  });
+  document.querySelectorAll('[data-remove-pkg]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const key = btn.getAttribute('data-remove-pkg');
+      if (!getGhToken()){ showToast(t.ghTokenMissing); return; }
+      const assetPath = 'assets/pkg-' + key + '.jpg';
+      showToast(t.ghCommitting);
+      try{
+        await ghDeleteFile(assetPath, 'Remove ' + assetPath);
+        const cfg = await fetchConfigForEdit();
+        if (cfg.pkg) cfg.pkg[key] = null;
+        await commitConfig(cfg, 'Remove package photo: ' + key);
+        ASSETS.pkg[key] = null;
+        showToast(t.ghCommitOk);
+      }catch(err){
+        showToast(t.ghCommitFail + err.message);
+      }
+      render();
+    });
+  });
+
+  document.getElementById('set-pw-btn').addEventListener('click', async ()=>{
+    const val = document.getElementById('new-pw').value || '';
+    const msg = document.getElementById('pw-change-msg');
+    if (val.length < 4){
+      msg.style.color = '#a83c3c';
+      msg.textContent = t.pwTooShort;
+      msg.style.display = 'block';
+      return;
+    }
+    if (!getGhToken()){ showToast(t.ghTokenMissing); return; }
+    showToast(t.ghCommitting);
+    try{
+      const hash = await sha256Hex(val);
+      const cfg = await fetchConfigForEdit();
+      cfg.adminPasswordHash = hash;
+      await commitConfig(cfg, 'Update admin password');
+      msg.style.color = '#1c463d';
+      msg.textContent = t.pwChanged;
+      msg.style.display = 'block';
+      document.getElementById('new-pw').value = '';
+      showToast(t.ghCommitOk);
+    }catch(err){
+      msg.style.color = '#a83c3c';
+      msg.textContent = t.ghCommitFail + err.message;
+      msg.style.display = 'block';
+    }
+  });
+}
+
+function handleUpload(e, opts){
+  const t = T[LANG];
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const img = new Image();
+    img.onload = async function(){
+      const max = opts.maxDim || 640;
+      let w = img.width, h = img.height;
+      if (w > max || h > max){
+        if (w > h){ h = Math.round(h * max / w); w = max; }
+        else { w = Math.round(w * max / h); h = max; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const fmt = opts.format || 'image/jpeg';
+      const dataUrl = fmt === 'image/png' ? canvas.toDataURL('image/png') : canvas.toDataURL(fmt, 0.85);
+
+      // Instant local preview for the admin, regardless of token/network state
+      opts.onLocalPreview(dataUrl);
+
+      if (!getGhToken()){
+        showToast(t.ghTokenMissing);
+        return;
+      }
+      showToast(t.ghCommitting);
+      try{
+        const base64 = dataUrl.split(',')[1];
+        await ghPutFile(opts.assetPath, base64, 'Upload ' + opts.assetPath);
+        const cfg = await fetchConfigForEdit();
+        opts.applyConfig(cfg, opts.assetPath);
+        await commitConfig(cfg, 'Update site-config.json for ' + opts.assetPath);
+        showToast(t.ghCommitOk);
+      }catch(err){
+        showToast(t.ghCommitFail + err.message);
+      }
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ---------------- boot ---------------- */
+(async function boot(){
+  await loadSiteConfig();
+  applyHashRoute();
+  render();
+  window.addEventListener('hashchange', ()=>{
+    applyHashRoute();
+    render();
+  });
+})();
+
+</script>
+</body>
+</html>
