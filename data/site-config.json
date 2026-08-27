@@ -3,7 +3,7 @@
   "logo": "assets/logo.png",
   "logoVersion": 3,
   "favicon": "assets/favicon.png",
-  "faviconVersion": 1,
+  "faviconVersion": 2,
   "pkg": {
     "asformin": "assets/pkg-asformin.jpg",
     "kardiva": "assets/pkg-kardiva.jpg",
